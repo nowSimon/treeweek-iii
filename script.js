@@ -53,7 +53,7 @@ const revealObserver = new IntersectionObserver((entries) => {
       revealObserver.unobserve(entry.target);
     }
   }
-}, { rootMargin: '0px 0px 200px 0px', threshold: 0 });
+}, { rootMargin: '0px 0px -20% 0px', threshold: 0 });
 
 for (const el of revealTargets) revealObserver.observe(el);
 
