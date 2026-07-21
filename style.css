@@ -217,7 +217,6 @@ section {
   width: 350px;
   max-width: 100%;
   aspect-ratio: 350 / 420;
-  opacity: 0;
   margin: 0 -10px;
 }
 
@@ -293,7 +292,6 @@ section {
   position: relative;
   width: min(92vw, 640px);
   aspect-ratio: 640 / 420;
-  opacity: 0;
   perspective: 1400px;
 }
 

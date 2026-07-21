@@ -41,40 +41,43 @@ ScrollTrigger.create({
 });
 
 gsap.utils.toArray('.polaroid').forEach((el, i) => {
-  gsap.to(el, {
-    opacity: 1,
-    y: 0,
+  gsap.from(el, {
+    opacity: 0,
+    y: 30,
     duration: 0.8,
     delay: i * 0.05,
+    immediateRender: false,
     scrollTrigger: {
       trigger: el,
-      start: 'top 85%',
+      start: 'top bottom',
+      once: true,
     },
   });
-  gsap.set(el, { y: 30 });
 });
 
-gsap.set('.fire-scene .scene', { opacity: 0 });
-gsap.to('.fire-scene .scene', {
-  opacity: 1,
+gsap.from('.fire-scene .scene', {
+  opacity: 0,
   duration: 1.4,
+  immediateRender: false,
   scrollTrigger: {
     trigger: '#fire-scene',
-    start: 'top 70%',
+    start: 'top bottom',
+    once: true,
   },
 });
 
-gsap.set('#envelope-wrap', { scale: 1.15, y: -80, opacity: 0, rotation: 0 });
-gsap.to('#envelope-wrap', {
-  opacity: 1,
-  scale: 1,
-  y: 0,
-  rotation: -1.5,
+gsap.set('#envelope-wrap', { rotation: -1.5 });
+gsap.from('#envelope-wrap', {
+  opacity: 0,
+  scale: 1.15,
+  y: -80,
+  rotation: 0,
   duration: 1.8,
   ease: 'expo.out',
+  immediateRender: false,
   scrollTrigger: {
     trigger: '#letter-scene',
-    start: 'top 65%',
+    start: 'top bottom',
     once: true,
   },
 });

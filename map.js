@@ -527,7 +527,18 @@
   rebuild();
 
   let resizeTimer;
+  let refreshTimer;
+  let lastW = window.innerWidth;
   window.addEventListener('resize', () => {
+    const w = window.innerWidth;
+    if (w === lastW) {
+      clearTimeout(refreshTimer);
+      refreshTimer = setTimeout(() => {
+        if (window.ScrollTrigger) ScrollTrigger.refresh();
+      }, 200);
+      return;
+    }
+    lastW = w;
     clearTimeout(resizeTimer);
     resizeTimer = setTimeout(rebuild, 250);
   });
