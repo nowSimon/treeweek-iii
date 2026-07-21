@@ -4,7 +4,7 @@
 (async function () {
   const NS = 'http://www.w3.org/2000/svg';
 
-  const svgText = await fetch('sprites.svg?v=6').then((r) => r.text());
+  const svgText = await fetch('sprites.svg?v=7').then((r) => r.text());
   const mount = document.createElement('div');
   mount.setAttribute('aria-hidden', 'true');
   mount.style.cssText = 'position:absolute;width:0;height:0;overflow:hidden';
@@ -17,7 +17,7 @@
     'stone': [40, 22], 'stone-2': [30, 18], 'log-bench': [140, 50],
     'sauna-hut': [180, 150], 'signpost': [70, 130], 'lantern-string': [300, 60],
     'hammock': [200, 90], 'sapling-shovel': [70, 100], 'human-sit': [50, 60],
-    'human-walk': [40, 80], 'human-pair': [80, 80], 'grass-1': [60, 30],
+    'human-walk': [40, 80], 'human-pair': [80, 80], 'cat-tail': [10, 14], 'grass-1': [60, 30],
     'grass-2': [60, 30], 'grass-3': [60, 30], 'fern': [70, 40],
     'mushroom': [30, 26], 'cat': [50, 30], 'deer': [90, 90],
     'suitcase': [50, 40], 'backpack': [40, 50], 'guitar-log': [100, 70],
@@ -305,12 +305,14 @@
 
     // fire scene — framing firs, bench + folks on the left, owl perched on the big fir
     { sec: '#fire-scene', zone: 'night', layer: 'near', sym: 'fir-1', x: -3, b: 0, w: 230 },
+    { sec: '#fire-scene', zone: 'night', layer: 'near', sym: 'owl', x: 6.5, b: 52, w: 40 },
     { sec: '#fire-scene', zone: 'night', layer: 'near', sym: 'fir-2', x: 88, b: 0, w: 200, flip: true },
     { sec: '#fire-scene', zone: 'night', layer: 'mid', sym: 'fir-3', x: 8, b: 4, w: 90 },
     { sec: '#fire-scene', zone: 'night', layer: 'mid', sym: 'log-bench', x: 16, b: 4, w: 140 },
-    { sec: '#fire-scene', zone: 'night', layer: 'mid', sym: 'human-sit', x: 20, b: 8, w: 48 },
-    { sec: '#fire-scene', zone: 'night', layer: 'mid', sym: 'human-sit', x: 27, b: 8, w: 44, flip: true },
-    { sec: '#fire-scene', zone: 'night', layer: 'mid', sym: 'owl', x: 5, b: 55, w: 40 },
+    { sec: '#fire-scene', zone: 'night', layer: 'mid', sym: 'human-sit', x: 20, b: 8, w: 48,
+      fx: [{ cls: 'fire-rim', x: 0.62, y: 0.12 }] },
+    { sec: '#fire-scene', zone: 'night', layer: 'mid', sym: 'human-sit', x: 27, b: 8, w: 44, flip: true,
+      fx: [{ cls: 'fire-rim', x: 0.62, y: 0.12 }] },
 
     // day 1 — LEFT block, predawn. Arrival goodies in the right margin strip.
     { day: 1, layer: 'mid', sym: 'signpost', x: 87, b: 10, w: 84 },
@@ -320,7 +322,11 @@
 
     // day 2 — RIGHT block, dawn. Sauna in the left margin strip.
     { day: 2, layer: 'far', sym: 'treeline-far', x: -26, b: 58, w: 460, o: 0.26 },
-    { day: 2, layer: 'mid', sym: 'sauna-hut', x: -8, b: 2, w: 200 },
+    { day: 2, layer: 'mid', sym: 'sauna-hut', x: -8, b: 2, w: 200,
+      fx: [
+        { cls: 'smoke', spans: 3, x: 0.69, y: 0.8 },
+        { cls: 'window-glow', x: 0.74, y: 0.3 },
+      ] },
     { day: 2, layer: 'near', sym: 'log-bench', x: 26, b: 1, w: 105 },
     { day: 2, layer: 'near', sym: 'human-walk', x: 41, b: 6, w: 44, onPath: true },
 
@@ -335,7 +341,8 @@
     // day 4 — RIGHT block, golden. Jam under lanterns strung between two firs (left strip).
     { day: 4, layer: 'mid', compose: [
         { sym: 'fir-2', x: -18, bpx: 26, w: 112 },
-        { sym: 'fir-2', x: 22, bpx: 26, w: 108, flip: true },
+        { sym: 'fir-2', x: 22, bpx: 26, w: 108, flip: true,
+          fx: [{ cls: 'leaves', spans: 4, x: 0.5, y: 0.6 }] },
         { sym: 'lantern-string', x: -12.4, bpx: 82, w: 398 },
     ] },
     { day: 4, layer: 'near', sym: 'guitar-log', x: 6, b: 1, w: 108 },
@@ -344,11 +351,17 @@
 
     // day 5 — LEFT block, golden. Porch + fir with the hammock strung between them (right strip).
     { day: 5, layer: 'mid', compose: [
-        { sym: 'fir-2', x: 84.5, bpx: 18, w: 110 },
-        { sym: 'porch', x: 96, bpx: 6, w: 170 },
+        { sym: 'fir-2', x: 84.5, bpx: 18, w: 110,
+          fx: [{ cls: 'leaves', spans: 3, x: 0.45, y: 0.6 }] },
+        { sym: 'porch', x: 96, bpx: 6, w: 170,
+          fx: [
+            { cls: 'smoke', spans: 3, x: 0.2, y: 0.87 },
+            { cls: 'window-glow', x: 0.18, y: 0.45 },
+          ] },
         { sym: 'hammock', x: 88.7, bpx: 14, w: 171 },
     ] },
-    { day: 5, layer: 'near', sym: 'cat', x: 61, b: 2, w: 48 },
+    { day: 5, layer: 'near', sym: 'cat', x: 61, b: 2, w: 48,
+      fx: [{ cls: 'tail-flick', sym: 'cat-tail', w: 10, x: 0, y: 0.02 }] },
     { day: 5, layer: 'near', sym: 'wildflower', x: 46, b: 7, w: 44 },
     { day: 5, layer: 'near', sym: 'wildflower', x: 63, b: 1, w: 40, flip: true },
     { day: 5, layer: 'near', sym: 'wildflower', x: 92.5, b: 0, w: 42 },
@@ -394,6 +407,24 @@
     if (item.o != null) el.style.opacity = item.o;
     if (item.flip) el.style.transform = 'scaleX(-1)';
     container.appendChild(el);
+    // fx: effect overlays (smoke, glow, leaves, tail) anchored to the sprite.
+    // f.x / f.y are fractions of sprite width/height in screen space, from bottom-left.
+    if (item.fx) {
+      const [vw, vh] = DIMS[item.sym];
+      const h = item.w * vh / vw;
+      for (const f of item.fx) {
+        const d = document.createElement('div');
+        d.className = f.cls;
+        if (f.spans) for (let i = 0; i < f.spans; i++) d.appendChild(document.createElement('span'));
+        if (f.sym) {
+          const [fvw, fvh] = DIMS[f.sym];
+          d.innerHTML = `<svg viewBox="0 0 ${fvw} ${fvh}" width="${f.w}" height="${(f.w * fvh / fvw).toFixed(1)}"><use href="#${f.sym}"></use></svg>`;
+        }
+        d.style.left = `calc(${el.style.left} + ${(f.x * item.w).toFixed(1)}px)`;
+        d.style.bottom = `calc(${el.style.bottom} + ${(f.y * h).toFixed(1)}px)`;
+        container.appendChild(d);
+      }
+    }
     return el;
   }
 
@@ -534,10 +565,57 @@
   if (fireDecor) spawnParticles(fireDecor, 'sparks', 10);
 
   const day6Decor = document.querySelector('.day-block[data-day="6"] .decor');
-  if (day6Decor) spawnParticles(day6Decor, 'fireflies', 8);
+  if (day6Decor) spawnParticles(day6Decor, 'fireflies', 14);
+
+  const day7Decor = document.querySelector('.day-block[data-day="7"] .decor');
+  if (day7Decor) spawnParticles(day7Decor, 'fireflies', 5);
 
   const heroDecor = document.querySelector('#hero .decor');
   if (heroDecor) spawnParticles(heroDecor, 'shooting-star', 1);
+
+  /* ---------- starfields ---------- */
+
+  function spawnStars(decor, count, seed, maxTop) {
+    if (!decor || decor.querySelector('.stars')) return;
+    const rand = mulberry32(seed);
+    const wrap = document.createElement('div');
+    wrap.className = 'stars';
+    for (let i = 0; i < count; i++) {
+      const s = document.createElement('span');
+      const tier = rand();
+      const size = tier < 0.6 ? 1 : tier < 0.88 ? 1.6 : 2.3;
+      s.style.left = (rand() * 100).toFixed(1) + '%';
+      s.style.top = (rand() * maxTop).toFixed(1) + '%';
+      s.style.width = s.style.height = size + 'px';
+      s.style.setProperty('--tw-dur', (2.5 + rand() * 4).toFixed(1) + 's');
+      s.style.setProperty('--tw-del', (rand() * 6).toFixed(1) + 's');
+      s.style.setProperty('--o', (0.35 + rand() * 0.5).toFixed(2));
+      wrap.appendChild(s);
+    }
+    decor.appendChild(wrap);
+    return wrap;
+  }
+
+  const heroStars = spawnStars(heroDecor, 60, 77, 72);
+  spawnStars(day7Decor, 16, 78, 55);
+  spawnStars(document.querySelector('#letter-scene .decor'), 22, 79, 60);
+
+  // Ursa Minor over the hero's left shoulder — Polaris brightest, at the tip.
+  if (heroStars) {
+    const UMI = [[22, 12, 1], [24.5, 18, 0.55], [26, 24, 0.6], [28.5, 30, 0.55], [26.5, 37, 0.65], [31, 41, 0.55], [33.5, 35, 0.6]];
+    for (const [x, y, glow] of UMI) {
+      const s = document.createElement('span');
+      s.className = 'constellation-star';
+      s.style.left = x + '%';
+      s.style.top = y + '%';
+      const size = glow === 1 ? 3.2 : 2.2;
+      s.style.width = s.style.height = size + 'px';
+      s.style.setProperty('--o', glow === 1 ? '1' : '0.75');
+      s.style.setProperty('--tw-dur', '5s');
+      s.style.setProperty('--tw-del', (x * 0.3).toFixed(1) + 's');
+      heroStars.appendChild(s);
+    }
+  }
 
   ScrollTrigger.refresh();
 })();
