@@ -40,46 +40,22 @@ ScrollTrigger.create({
   },
 });
 
-gsap.utils.toArray('.polaroid').forEach((el, i) => {
-  gsap.set(el, { y: 30 });
-  gsap.to(el, {
-    opacity: 1,
-    y: 0,
-    duration: 0.8,
-    delay: i * 0.05,
-    scrollTrigger: {
-      trigger: el,
-      start: 'top bottom',
-      once: true,
-    },
-  });
-});
+const revealTargets = [
+  ...document.querySelectorAll('.polaroid'),
+  document.querySelector('.fire-scene .scene'),
+  document.getElementById('envelope-wrap'),
+].filter(Boolean);
 
-gsap.set('.fire-scene .scene', { opacity: 0 });
-gsap.to('.fire-scene .scene', {
-  opacity: 1,
-  duration: 1.4,
-  scrollTrigger: {
-    trigger: '#fire-scene',
-    start: 'top bottom',
-    once: true,
-  },
-});
+const revealObserver = new IntersectionObserver((entries) => {
+  for (const entry of entries) {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('is-visible');
+      revealObserver.unobserve(entry.target);
+    }
+  }
+}, { rootMargin: '0px 0px 200px 0px', threshold: 0 });
 
-gsap.set('#envelope-wrap', { scale: 1.15, y: -80, rotation: 0 });
-gsap.to('#envelope-wrap', {
-  opacity: 1,
-  scale: 1,
-  y: 0,
-  rotation: -1.5,
-  duration: 1.8,
-  ease: 'expo.out',
-  scrollTrigger: {
-    trigger: '#letter-scene',
-    start: 'top bottom',
-    once: true,
-  },
-});
+for (const el of revealTargets) revealObserver.observe(el);
 
 const seal = document.getElementById('seal');
 const sheet1 = document.getElementById('sheet-1');

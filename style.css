@@ -218,8 +218,22 @@ section {
   max-width: 100%;
   aspect-ratio: 350 / 420;
   opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
   margin: 0 -10px;
 }
+
+.polaroid.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.fire-scene .scene {
+  opacity: 0;
+  transition: opacity 1.4s ease;
+}
+
+.fire-scene .scene.is-visible { opacity: 1; }
 
 .polaroid.has-photo {
   background: #f4efe3;
@@ -294,7 +308,14 @@ section {
   width: min(92vw, 640px);
   aspect-ratio: 640 / 420;
   opacity: 0;
+  transform: translateY(-80px) scale(1.15) rotate(0deg);
+  transition: opacity 1.6s cubic-bezier(0.16, 1, 0.3, 1), transform 1.6s cubic-bezier(0.16, 1, 0.3, 1);
   perspective: 1400px;
+}
+
+.envelope-wrap.is-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1) rotate(-1.5deg);
 }
 
 .envelope {
