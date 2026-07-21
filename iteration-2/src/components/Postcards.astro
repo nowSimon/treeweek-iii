@@ -1,0 +1,123 @@
+---
+// Postcards.astro — layout wrapper for the 3 edition cards.
+// TW1 and TW2 use <Postcard> (flip). TW3 uses <EnvelopeCard>.
+import Postcard from './Postcard.astro';
+import EnvelopeCard from './EnvelopeCard.astro';
+import Ornament from './Ornament.astro';
+import editions from '../content/editions.json';
+
+const tw1 = editions[0];
+const tw2 = editions[1];
+---
+
+<section class="editions section">
+  <div class="container">
+    <div class="editions-head fade-in">
+      <span class="eyebrow">The lineage</span>
+      <h2 class="editions-h">Three editions.<br />One ongoing spell.</h2>
+      <Ornament type="divider" />
+      <p class="editions-hint">
+        <span class="hint-desktop">Hover a card to read it.</span>
+        <span class="hint-touch">Tap a card to read it.</span>
+      </p>
+    </div>
+
+    <div class="editions-row">
+      <div class="edition-slot fade-in">
+        <Postcard
+          number={tw1.number}
+          year={tw1.year}
+          spell={tw1.spell}
+          photo={tw1.photo}
+          back={tw1.back}
+          tilt={-3}
+          offsetY="0.5rem"
+        />
+      </div>
+
+      <div class="edition-slot fade-in">
+        <Postcard
+          number={tw2.number}
+          year={tw2.year}
+          spell={tw2.spell}
+          photo={tw2.photo}
+          back={tw2.back}
+          tilt={2}
+          offsetY="-0.5rem"
+        />
+      </div>
+
+      <div class="edition-slot fade-in">
+        <EnvelopeCard />
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .editions {
+    background: var(--color-cream-deep);
+  }
+
+  .editions-head {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-m);
+    margin-bottom: var(--space-2xl);
+  }
+
+  .editions-h {
+    font-family: var(--font-display);
+    font-size: var(--text-3xl);
+    font-style: italic;
+    font-weight: 300;
+    line-height: 1;
+    color: var(--color-forest-deep);
+    letter-spacing: -0.01em;
+    margin-top: var(--space-s);
+  }
+
+  .editions-hint {
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--color-ink-muted);
+    opacity: 0.6;
+  }
+
+  .hint-touch { display: none; }
+  @media (hover: none), (pointer: coarse) {
+    .hint-desktop { display: none; }
+    .hint-touch { display: inline; }
+  }
+
+  .editions-row {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-l);
+    justify-items: center;
+    align-items: start;
+  }
+
+  @media (min-width: 720px) {
+    .editions-row {
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-m);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .editions-row {
+      gap: var(--space-l);
+    }
+  }
+
+  .edition-slot {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+</style>

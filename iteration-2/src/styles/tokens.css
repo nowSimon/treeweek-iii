@@ -1,0 +1,103 @@
+/* ============================================================
+   TREEWEEK — Design Tokens
+   Single source of truth for colors, type, spacing, motion.
+   Change any value here; it propagates everywhere.
+   ============================================================ */
+
+:root {
+  /* ── Color ───────────────────────────────────────────────
+     Warm cream base + soft forest + old gold + dusty rose.
+     Blue accent for the venue section only.               */
+
+  --color-cream:         #f7efdf;   /* primary background */
+  --color-cream-deep:    #ede0c2;   /* secondary background, cards */
+  --color-parchment:     #f2e8d0;   /* postcard backs */
+  --color-forest-soft:   #4b6151;   /* muted forest, accents */
+  --color-forest-deep:   #2c3a30;   /* dark text, emphasis */
+  --color-gold-old:      #a58548;   /* aged gold, ornaments */
+  --color-gold-light:    #c9a86a;   /* lighter gold accent */
+  --color-rose-dust:     #c19c8f;   /* feminine accent */
+  --color-rose-deep:     #a67e70;   /* deeper rose */
+  --color-blue-dust:     #8ba5b3;   /* venue accent */
+  --color-blue-tint:     #e3ecec;   /* venue background wash */
+  --color-ink:           #2b2620;   /* body text */
+  --color-ink-muted:     #6b5f4f;   /* secondary text */
+  --color-hairline:      rgba(43, 38, 32, 0.12);  /* thin dividers */
+
+  /* ── Typography ─────────────────────────────────────────  */
+
+  --font-display: 'Fraunces Variable', 'Fraunces', Georgia, 'Times New Roman', serif;
+  --font-body:    'Inter Variable', 'Inter', system-ui, -apple-system, sans-serif;
+  --font-hand:    'Caveat', 'Bradley Hand', cursive;
+
+  /* Fluid type scale (clamp = min, preferred, max) */
+  --text-xs:   clamp(0.75rem, 0.72rem + 0.15vw, 0.875rem);
+  --text-s:    clamp(0.875rem, 0.85rem + 0.2vw, 1rem);
+  --text-m:    clamp(1rem, 0.95rem + 0.3vw, 1.125rem);
+  --text-l:    clamp(1.25rem, 1.15rem + 0.6vw, 1.5rem);
+  --text-xl:   clamp(1.5rem, 1.3rem + 1vw, 2rem);
+  --text-2xl:  clamp(2rem, 1.5rem + 2vw, 3rem);
+  --text-3xl:  clamp(3rem, 2rem + 4vw, 5rem);
+  --text-4xl:  clamp(4rem, 2.5rem + 8vw, 9rem);
+  --text-hero: clamp(4.5rem, 3rem + 10vw, 11rem);
+
+  /* Line heights */
+  --leading-tight:  1.1;
+  --leading-snug:   1.35;
+  --leading-normal: 1.55;
+  --leading-relaxed: 1.75;
+
+  /* ── Spacing (T-shirt sizes) ─────────────────────────── */
+
+  --space-3xs: 0.25rem;
+  --space-2xs: 0.5rem;
+  --space-xs:  0.75rem;
+  --space-s:   1rem;
+  --space-m:   1.5rem;
+  --space-l:   2.5rem;
+  --space-xl:  4rem;
+  --space-2xl: 6rem;
+  --space-3xl: 10rem;
+
+  /* ── Layout ─────────────────────────────────────────── */
+
+  --container-narrow: 44rem;
+  --container-mid:    64rem;
+  --container-wide:   82rem;
+  --container-full:   100%;
+
+  /* ── Motion ─────────────────────────────────────────── */
+
+  --ease-out:  cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-flip: cubic-bezier(0.4, 0.2, 0.2, 1);
+  --ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
+
+  --dur-fast:   150ms;
+  --dur-med:    400ms;
+  --dur-slow:   700ms;
+
+  /* ── Elevation (subtle shadows for cards) ────────────  */
+
+  --shadow-postcard: 0 2px 4px rgba(43, 38, 32, 0.08),
+                     0 8px 24px rgba(43, 38, 32, 0.12);
+  --shadow-postcard-lift: 0 6px 12px rgba(43, 38, 32, 0.12),
+                          0 20px 48px rgba(43, 38, 32, 0.16);
+
+  /* ── Radii ─────────────────────────────────────────── */
+
+  --radius-s: 2px;
+  --radius-m: 4px;
+  --radius-l: 8px;
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

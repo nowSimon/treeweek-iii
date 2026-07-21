@@ -1,0 +1,80 @@
+---
+// FinalCTA.astro — closing invitation
+import Ornament from './Ornament.astro';
+---
+
+<section class="final-cta section">
+  <div class="final-cta-inner fade-in">
+    <Ornament type="star" size="1rem" />
+
+    <h2 class="final-cta-h">See you<br />in the forest.</h2>
+
+    <Ornament type="divider" class="final-cta-div" />
+
+    <a
+      href="https://coliven.com/events/eb0cc6dae9a7"
+      target="_blank"
+      rel="noopener"
+      class="final-cta-link text-cta"
+    >
+      Come to TREEWEEK <span class="arrow">→</span>
+    </a>
+
+    <p class="final-cta-meta">
+      Sep 22 – 29, 2026 <span class="dot">·</span> Brandenburg <span class="dot">·</span> ~80 people
+    </p>
+  </div>
+</section>
+
+<style>
+  .final-cta {
+    background: var(--color-cream-deep);
+    padding-block: var(--space-3xl);
+    text-align: center;
+    display: flex;
+    justify-content: center;
+  }
+
+  .final-cta-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-l);
+    padding-inline: var(--space-m);
+  }
+
+  .final-cta-h {
+    font-family: var(--font-display);
+    font-size: var(--text-3xl);
+    font-style: italic;
+    font-weight: 300;
+    line-height: 1;
+    color: var(--color-forest-deep);
+    letter-spacing: -0.01em;
+  }
+
+  .final-cta-div {
+    color: var(--color-gold-old);
+    margin-block: var(--space-2xs);
+  }
+
+  .final-cta-link {
+    /* uses .text-cta */
+  }
+
+  .final-cta-meta {
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-ink-muted);
+    opacity: 0.6;
+    margin-top: var(--space-s);
+  }
+
+  .dot {
+    display: inline-block;
+    margin-inline: 0.35em;
+    color: var(--color-rose-dust);
+  }
+</style>

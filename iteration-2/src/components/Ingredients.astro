@@ -1,0 +1,141 @@
+---
+// Ingredients.astro — recipe-card list of "ingredients for a magic week"
+// Data-driven from src/content/activities.json.
+import activities from '../content/activities.json';
+import Ornament from './Ornament.astro';
+---
+
+<section class="ingredients section">
+  <div class="container">
+    <div class="ingredients-card fade-in">
+      <div class="ingredients-header">
+        <Ornament type="star" size="1rem" />
+        <h2 class="ingredients-title">Ingredients for a magic week</h2>
+        <Ornament type="star" size="1rem" />
+      </div>
+
+      <ul class="ingredients-list">
+        {activities.map((line, i) => (
+          <li class="ingredient">
+            <span class="ingredient-mark">✦</span>
+            <span class="ingredient-text">{line}</span>
+          </li>
+        ))}
+      </ul>
+
+      <div class="ingredients-footer">
+        <Ornament type="divider" />
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .ingredients {
+    background: var(--color-cream);
+  }
+
+  .ingredients-card {
+    max-width: 62rem;
+    margin-inline: auto;
+    padding: var(--space-xl) var(--space-l);
+    background: var(--color-cream-deep);
+    border: 1px solid var(--color-gold-old);
+    border-radius: var(--radius-m);
+    position: relative;
+  }
+
+  @media (min-width: 640px) {
+    .ingredients-card {
+      padding: var(--space-2xl) var(--space-xl);
+    }
+  }
+
+  /* Corner ornaments — pseudo-elements for gold decorative dots */
+  .ingredients-card::before,
+  .ingredients-card::after {
+    content: '';
+    position: absolute;
+    width: var(--space-s);
+    height: var(--space-s);
+    border: 1px solid var(--color-gold-old);
+    opacity: 0.6;
+  }
+  .ingredients-card::before {
+    top: var(--space-s);
+    left: var(--space-s);
+    border-right: none;
+    border-bottom: none;
+  }
+  .ingredients-card::after {
+    bottom: var(--space-s);
+    right: var(--space-s);
+    border-left: none;
+    border-top: none;
+  }
+
+  .ingredients-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-m);
+    margin-bottom: var(--space-xl);
+  }
+
+  .ingredients-title {
+    font-family: var(--font-display);
+    font-size: var(--text-xl);
+    font-weight: 400;
+    font-style: italic;
+    letter-spacing: 0.02em;
+    color: var(--color-forest-deep);
+    text-align: center;
+    line-height: 1.2;
+  }
+
+  .ingredients-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    columns: 1;
+    column-gap: var(--space-xl);
+  }
+
+  @media (min-width: 720px) {
+    .ingredients-list {
+      columns: 2;
+    }
+  }
+
+  .ingredient {
+    display: flex;
+    gap: var(--space-s);
+    align-items: baseline;
+    padding-block: var(--space-2xs);
+    break-inside: avoid;
+    page-break-inside: avoid;
+    -webkit-column-break-inside: avoid;
+  }
+
+  .ingredient-mark {
+    color: var(--color-gold-old);
+    font-size: var(--text-s);
+    opacity: 0.7;
+    flex-shrink: 0;
+  }
+
+  .ingredient-text {
+    font-family: var(--font-display);
+    font-size: var(--text-l);
+    font-style: italic;
+    font-weight: 300;
+    color: var(--color-ink);
+    line-height: var(--leading-snug);
+  }
+
+  .ingredients-footer {
+    display: flex;
+    justify-content: center;
+    margin-top: var(--space-xl);
+  }
+</style>

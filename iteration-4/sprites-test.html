@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>sprites — quality gate</title>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&display=swap" rel="stylesheet">
+<style>
+  body { margin: 0; font-family: system-ui, sans-serif; background: #000; }
+
+  .zone { padding: 28px 20px 40px; }
+  .zone h2 {
+    margin: 0 0 18px; font-size: 12px; font-weight: 600;
+    letter-spacing: 0.2em; text-transform: uppercase; opacity: 0.55; color: #fff;
+  }
+  .row { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 26px; }
+  .cell { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+  .cell span { font-size: 10px; color: rgba(255,255,255,0.45); }
+  .cell svg { display: block; overflow: visible; }
+
+  /* zone backgrounds match script.js palette stops roughly */
+  .zone[data-zone="night"]   { background: linear-gradient(180deg, #050912, #0a1120); }
+  .zone[data-zone="predawn"] { background: linear-gradient(180deg, #0a1226, #16223f); }
+  .zone[data-zone="dawn"]    { background: linear-gradient(180deg, #3a2a3f, #7a4a3a); }
+  .zone[data-zone="day"]     { background: linear-gradient(180deg, #7d9a6a, #a8b478); }
+  .zone[data-zone="golden"]  { background: linear-gradient(180deg, #b07840, #8a5030); }
+  .zone[data-zone="dusk"]    { background: linear-gradient(180deg, #3a2440, #1c1430); }
+  .zone[data-zone="night2"]  { background: linear-gradient(180deg, #0a0e1c, #050810); }
+
+  /* ===== zone tint variables (will move to style.css when gate passes) ===== */
+  .decor {
+    --s-dark:  #0b0f1c;
+    --s-mid:   #131b30;
+    --s-light: #1c2742;
+    --s-rim:   rgba(157,180,212,0.5);
+    --s-glow:  #ffcf8f;
+  }
+  .decor[data-zone="predawn"] {
+    --s-dark:  #0d1424;
+    --s-mid:   #182339;
+    --s-light: #24324e;
+    --s-rim:   rgba(170,195,230,0.5);
+  }
+  .decor[data-zone="dawn"] {
+    --s-dark:  #221420;
+    --s-mid:   #35202a;
+    --s-light: #4a2e33;
+    --s-rim:   rgba(255,176,120,0.55);
+  }
+  .decor[data-zone="day"] {
+    --s-dark:  #2a3324;
+    --s-mid:   #3c4a30;
+    --s-light: #50613c;
+    --s-rim:   rgba(255,240,200,0.55);
+  }
+  .decor[data-zone="golden"] {
+    --s-dark:  #33200f;
+    --s-mid:   #4a2f16;
+    --s-light: #61401f;
+    --s-rim:   rgba(255,200,130,0.6);
+  }
+  .decor[data-zone="dusk"] {
+    --s-dark:  #170f1e;
+    --s-mid:   #241830;
+    --s-light: #332244;
+    --s-rim:   rgba(255,150,120,0.5);
+  }
+  .decor[data-zone="night2"] {
+    --s-dark:  #0a0e1a;
+    --s-mid:   #111a2c;
+    --s-light: #19253d;
+    --s-rim:   rgba(150,175,210,0.45);
+  }
+</style>
+</head>
+<body>
+
+<div id="sprite-mount"></div>
+<div id="strips"></div>
+
+<script>
+const SYMBOLS = [
+  ['moon', 80, 80],
+  ['treeline-far', 400, 80],
+  ['treeline-near', 400, 120],
+  ['fir-1', 80, 200],
+  ['fir-2', 100, 160],
+  ['fir-3', 60, 110],
+  ['stone', 40, 22],
+  ['stone-2', 30, 18],
+  ['log-bench', 140, 50],
+  ['sauna-hut', 180, 150],
+  ['signpost', 70, 130],
+  ['lantern-string', 300, 60],
+  ['hammock', 200, 90],
+  ['sapling-shovel', 70, 100],
+  ['human-sit', 50, 60],
+  ['human-walk', 40, 80],
+  ['human-pair', 80, 80],
+  ['grass-1', 60, 30],
+  ['grass-2', 60, 30],
+  ['grass-3', 60, 30],
+  ['fern', 70, 40],
+  ['mushroom', 30, 26],
+  ['cat', 50, 30],
+  ['deer', 90, 90],
+  ['suitcase', 50, 40],
+  ['backpack', 40, 50],
+  ['guitar-log', 100, 70],
+  ['wine-bottle', 24, 60],
+  ['porch', 200, 170],
+  ['ledge', 400, 80],
+  ['lake-shore', 240, 70],
+  ['wildflower', 50, 40],
+  ['pumpkin-cluster', 90, 50],
+  ['owl', 50, 60],
+];
+
+const ZONES = ['night', 'predawn', 'dawn', 'day', 'golden', 'dusk', 'night2'];
+
+fetch('sprites.svg')
+  .then((r) => r.text())
+  .then((txt) => {
+    document.getElementById('sprite-mount').innerHTML = txt;
+
+    const strips = document.getElementById('strips');
+    for (const zone of ZONES) {
+      const z = document.createElement('div');
+      z.className = 'zone decor';
+      z.dataset.zone = zone;
+      z.setAttribute('data-zone', zone);
+      z.innerHTML = `<h2>${zone}</h2>`;
+      const row = document.createElement('div');
+      row.className = 'row';
+      for (const [id, w, h] of SYMBOLS) {
+        for (const scale of [1, 0.55]) {
+          const cell = document.createElement('div');
+          cell.className = 'cell';
+          const sw = Math.round(w * scale);
+          const sh = Math.round(h * scale);
+          cell.innerHTML =
+            `<svg width="${sw}" height="${sh}" viewBox="0 0 ${w} ${h}"><use href="#${id}"></use></svg>` +
+            (scale === 1 ? `<span>${id}</span>` : `<span>·</span>`);
+          row.appendChild(cell);
+        }
+      }
+      z.appendChild(row);
+      strips.appendChild(z);
+    }
+  });
+</script>
+
+</body>
+</html>

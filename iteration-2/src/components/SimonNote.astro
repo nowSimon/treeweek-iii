@@ -1,0 +1,162 @@
+---
+// SimonNote.astro — a personal letter from the organizer.
+// Two-column magazine spread; collapses to single column on mobile.
+import Ornament from './Ornament.astro';
+---
+
+<section class="simon section">
+  <div class="container simon-grid">
+    <aside class="simon-side fade-in">
+      <div
+        class="simon-portrait image-slot"
+        data-label="Simon photo"
+        title="Drop a portrait at /public/images/people/simon.jpg"
+      >
+        <img
+          src="/images/people/simon.jpg"
+          alt="Simon Ohler"
+          onerror="this.remove()"
+          loading="lazy"
+        />
+      </div>
+      <div class="simon-meta">
+        <div class="simon-name">Simon Ohler</div>
+        <div class="simon-role">host, TREEWEEK</div>
+      </div>
+    </aside>
+
+    <div class="simon-letter fade-in">
+      <span class="eyebrow">A note</span>
+
+      <h2 class="simon-h">Hi, and welcome.</h2>
+
+      <p>
+        In 2024 I threw a birthday party in the forest, invited seventy-five friends and strangers-about-to-become-friends, and something happened that we now call <em>TREEWEEK</em>. In 2025 we did it again, better, and it sold out. This is year three.
+      </p>
+
+      <p>
+        We come from Twitter, from Substack, from the fringes of philosophy and art and technology — the friendly ambitious nerds you always wanted to meet in person. For seven nights we cook together, jam together, sauna together, and think together. There is a giant painting, always. There is a fire, most evenings.
+      </p>
+
+      <p>
+        If you're wondering whether it's for you, it probably is. Come.
+      </p>
+
+      <div class="simon-sign">— Simon</div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .simon {
+    background: var(--color-cream);
+  }
+
+  .simon-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-xl);
+    align-items: start;
+  }
+
+  @media (min-width: 900px) {
+    .simon-grid {
+      grid-template-columns: minmax(200px, 1fr) 3fr;
+      gap: var(--space-2xl);
+    }
+  }
+
+  .simon-side {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-m);
+  }
+
+  .simon-portrait {
+    width: 8rem;
+    height: 8rem;
+    border-radius: 50%;
+    background: var(--color-cream-deep);
+    border: 1px solid var(--color-hairline);
+    overflow: hidden;
+    /* image-slot styles come from global.css */
+  }
+
+  .simon-portrait img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* Override the dashed rectangle for the round portrait */
+  .simon-portrait::before {
+    border-radius: 50%;
+    font-size: 0.55rem;
+    letter-spacing: 0.1em;
+    padding: 0.5rem;
+    inset: 0.3rem;
+  }
+  .simon-portrait::after {
+    transform: translate(-50%, calc(-50% - 1.3em));
+    width: 1.1rem;
+    height: 1.1rem;
+  }
+
+  .simon-meta {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3xs);
+  }
+
+  .simon-name {
+    font-family: var(--font-display);
+    font-size: var(--text-l);
+    font-weight: 500;
+    color: var(--color-forest-deep);
+  }
+
+  .simon-role {
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--color-ink-muted);
+  }
+
+  .simon-letter {
+    max-width: 42rem;
+  }
+
+  .simon-h {
+    font-family: var(--font-display);
+    font-size: var(--text-2xl);
+    font-style: italic;
+    font-weight: 400;
+    color: var(--color-forest-deep);
+    margin-block: var(--space-s) var(--space-l);
+    letter-spacing: -0.01em;
+  }
+
+  .simon-letter p {
+    font-family: var(--font-display);
+    font-size: var(--text-l);
+    font-weight: 300;
+    line-height: var(--leading-relaxed);
+    color: var(--color-ink);
+    margin-bottom: var(--space-m);
+  }
+
+  .simon-letter em {
+    font-style: italic;
+    color: var(--color-forest-deep);
+  }
+
+  .simon-sign {
+    font-family: var(--font-hand);
+    font-size: var(--text-xl);
+    color: var(--color-rose-deep);
+    margin-top: var(--space-l);
+    line-height: 1;
+  }
+</style>

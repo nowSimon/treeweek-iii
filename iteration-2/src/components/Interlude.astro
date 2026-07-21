@@ -1,0 +1,75 @@
+---
+// Interlude.astro — a single pulled quote, used between sections.
+// Reused 3-4 times throughout the page.
+import Ornament from './Ornament.astro';
+
+interface Props {
+  quote: string;
+  attribution: string;
+  tone?: 'cream' | 'cream-deep';
+}
+
+const { quote, attribution, tone = 'cream' } = Astro.props;
+---
+
+<section class={`interlude interlude--${tone}`}>
+  <div class="interlude-inner fade-in">
+    <Ornament type="star" size="0.9rem" class="interlude-mark" />
+    <blockquote class="interlude-quote">
+      <p>&ldquo;{quote}&rdquo;</p>
+    </blockquote>
+    <cite class="interlude-attr">— {attribution}</cite>
+  </div>
+</section>
+
+<style>
+  .interlude {
+    padding-block: var(--space-2xl);
+    padding-inline: var(--space-m);
+    display: flex;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .interlude--cream { background: var(--color-cream); }
+  .interlude--cream-deep { background: var(--color-cream-deep); }
+
+  @media (min-width: 1024px) {
+    .interlude { padding-block: var(--space-3xl); }
+  }
+
+  .interlude-inner {
+    max-width: 44rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-m);
+  }
+
+  .interlude-mark {
+    color: var(--color-gold-old);
+    opacity: 0.7;
+  }
+
+  .interlude-quote {
+    font-family: var(--font-display);
+    font-size: var(--text-2xl);
+    font-style: italic;
+    font-weight: 300;
+    line-height: var(--leading-snug);
+    color: var(--color-forest-deep);
+    letter-spacing: -0.005em;
+  }
+
+  .interlude-quote p { margin: 0; }
+
+  .interlude-attr {
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    font-style: normal;
+    font-weight: 400;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--color-ink-muted);
+  }
+</style>

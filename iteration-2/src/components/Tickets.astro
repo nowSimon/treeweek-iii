@@ -1,0 +1,297 @@
+---
+// Tickets.astro — practical / booking section
+// Two-column: prose intro (left) + structured event card (right).
+import Ornament from './Ornament.astro';
+---
+
+<section id="tickets" class="tickets section">
+  <div class="container tickets-grid">
+    <div class="tickets-intro fade-in">
+      <span class="eyebrow">Get in</span>
+
+      <h2 class="tickets-h">Come to TREEWEEK.</h2>
+
+      <p class="tickets-p">
+        Seven nights in the forest. All-inclusive. Roughly eighty people who get it. After this week your timeline will be different, your friendships deeper, your sense of what's possible expanded.
+      </p>
+
+      <p class="tickets-p">
+        Rooms and camping spots are limited. Bookings go through <a href="https://coliven.com/events/eb0cc6dae9a7" target="_blank" rel="noopener" class="inline-link">Coliven</a>.
+      </p>
+
+      <div class="tickets-contact">
+        Questions? <a href="mailto:TREEWEEK@nowmedia.org" class="inline-link">TREEWEEK@nowmedia.org</a>
+        <br />
+        or on X: <a href="https://x.com/simon_ohler" target="_blank" rel="noopener" class="inline-link">@simon_ohler</a>
+      </div>
+    </div>
+
+    <div class="tickets-card fade-in">
+      <div class="tickets-card-head">
+        <span class="tickets-card-title">TREEWEEK III</span>
+        <span class="tickets-card-badge">THR33W33K</span>
+      </div>
+
+      <div class="tickets-card-dates">Sep 22 – 29, 2026</div>
+      <div class="tickets-card-loc">Seegut Blaue Blume <span class="dot">·</span> Brandenburg</div>
+      <div class="tickets-card-nights">Seven nights, all-inclusive</div>
+
+      <div class="tickets-card-rule"></div>
+
+      <div class="tickets-tiers">
+        <div class="tickets-tier">
+          <span>Camping</span>
+          <span class="tickets-price">from €400</span>
+        </div>
+        <div class="tickets-tier">
+          <span>Room</span>
+          <span class="tickets-price">from €550</span>
+        </div>
+      </div>
+
+      <div class="tickets-card-rule"></div>
+
+      <ul class="tickets-includes">
+        <li><span class="mark">✦</span> Seven nights accommodation</li>
+        <li><span class="mark">✦</span> All meals, tea &amp; coffee, snacks</li>
+        <li><span class="mark">✦</span> Two saunas, art supplies, beads</li>
+        <li><span class="mark">✦</span> All activities &amp; workshops</li>
+        <li><span class="mark">✦</span> Many blessings and the joy of friendship</li>
+      </ul>
+
+      <a
+        href="https://coliven.com/events/eb0cc6dae9a7"
+        target="_blank"
+        rel="noopener"
+        class="tickets-cta"
+      >
+        Get your ticket at Coliven <span class="arrow">→</span>
+      </a>
+
+      <p class="tickets-note">Sold out? Same link to join the waitlist.</p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .tickets {
+    background: var(--color-cream);
+  }
+
+  .tickets-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-xl);
+    align-items: start;
+  }
+
+  @media (min-width: 900px) {
+    .tickets-grid {
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-2xl);
+      align-items: center;
+    }
+  }
+
+  .tickets-h {
+    font-family: var(--font-display);
+    font-size: var(--text-3xl);
+    font-style: italic;
+    font-weight: 400;
+    line-height: 1;
+    color: var(--color-forest-deep);
+    margin-block: var(--space-s) var(--space-l);
+  }
+
+  .tickets-p {
+    font-family: var(--font-body);
+    font-size: var(--text-m);
+    line-height: var(--leading-relaxed);
+    color: var(--color-ink);
+    margin-bottom: var(--space-m);
+  }
+
+  .inline-link {
+    color: var(--color-forest-deep);
+    text-decoration: underline;
+    text-decoration-color: var(--color-gold-old);
+    text-underline-offset: 0.2em;
+    transition: color var(--dur-fast);
+  }
+  .inline-link:hover { color: var(--color-gold-old); }
+
+  .tickets-contact {
+    margin-top: var(--space-l);
+    font-family: var(--font-body);
+    font-size: var(--text-s);
+    color: var(--color-ink-muted);
+    line-height: var(--leading-relaxed);
+  }
+
+  /* Card */
+  .tickets-card {
+    background: var(--color-cream-deep);
+    border: 1px solid var(--color-hairline);
+    border-radius: var(--radius-l);
+    padding: var(--space-xl) var(--space-l);
+  }
+
+  @media (min-width: 640px) {
+    .tickets-card { padding: var(--space-xl); }
+  }
+
+  .tickets-card-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: var(--space-s);
+    margin-bottom: var(--space-m);
+  }
+
+  .tickets-card-title {
+    font-family: var(--font-display);
+    font-size: var(--text-l);
+    font-weight: 500;
+    color: var(--color-forest-deep);
+    letter-spacing: 0.02em;
+  }
+
+  .tickets-card-badge {
+    font-family: var(--font-body);
+    font-size: 0.65rem;
+    font-weight: 500;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--color-gold-old);
+    border: 1px solid var(--color-gold-old);
+    padding: 0.25em 0.7em;
+    border-radius: 100px;
+  }
+
+  .tickets-card-dates {
+    font-family: var(--font-display);
+    font-size: var(--text-2xl);
+    font-style: italic;
+    font-weight: 400;
+    color: var(--color-forest-deep);
+    line-height: 1;
+    margin-bottom: var(--space-2xs);
+  }
+
+  .tickets-card-loc {
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--color-ink-muted);
+    margin-bottom: var(--space-2xs);
+  }
+
+  .tickets-card-nights {
+    font-family: var(--font-display);
+    font-size: var(--text-s);
+    font-style: italic;
+    color: var(--color-rose-deep);
+  }
+
+  .tickets-card-rule {
+    height: 1px;
+    background: var(--color-hairline);
+    margin-block: var(--space-l);
+  }
+
+  .tickets-tiers {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-s);
+  }
+
+  .tickets-tier {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-family: var(--font-body);
+    font-size: var(--text-m);
+    color: var(--color-ink);
+  }
+
+  .tickets-price {
+    font-family: var(--font-display);
+    font-size: var(--text-l);
+    font-weight: 500;
+    color: var(--color-gold-old);
+  }
+
+  .tickets-includes {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2xs);
+  }
+
+  .tickets-includes li {
+    display: flex;
+    gap: var(--space-xs);
+    font-family: var(--font-body);
+    font-size: var(--text-s);
+    color: var(--color-ink-muted);
+    line-height: var(--leading-normal);
+  }
+
+  .tickets-includes .mark {
+    color: var(--color-gold-old);
+    opacity: 0.7;
+    flex-shrink: 0;
+  }
+
+  .tickets-cta {
+    display: block;
+    text-align: center;
+    font-family: var(--font-body);
+    font-size: var(--text-s);
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-cream);
+    background: var(--color-forest-deep);
+    padding: var(--space-s) var(--space-l);
+    border-radius: var(--radius-m);
+    text-decoration: none;
+    margin-top: var(--space-l);
+    transition:
+      background var(--dur-fast),
+      transform var(--dur-fast);
+  }
+
+  .tickets-cta:hover,
+  .tickets-cta:focus-visible {
+    background: var(--color-gold-old);
+    transform: translateY(-1px);
+  }
+
+  .tickets-cta .arrow {
+    display: inline-block;
+    transition: transform var(--dur-fast) var(--ease-out);
+  }
+
+  .tickets-cta:hover .arrow {
+    transform: translateX(0.3em);
+  }
+
+  .tickets-note {
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    color: var(--color-ink-muted);
+    opacity: 0.7;
+    text-align: center;
+    margin-top: var(--space-s);
+  }
+
+  .dot {
+    display: inline-block;
+    margin-inline: 0.35em;
+    color: var(--color-rose-dust);
+  }
+</style>
