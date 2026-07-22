@@ -100,16 +100,21 @@ section {
   width: 100%;
   height: 72vh;
   overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
-.fire-scene-animation {
-  max-width: 100%;
-  max-height: 100%;
-  width: auto;
-  height: auto;
+.firepit-glow {
+  position: absolute;
+  width: 640px;
+  height: 640px;
+  transform: translate(-50%, 50%);
+  background: radial-gradient(circle at center,
+    rgba(255,196,120,0.55) 0%,
+    rgba(255,138,60,0.28) 22%,
+    rgba(255,110,50,0.08) 45%,
+    transparent 65%);
+  mix-blend-mode: screen;
+  pointer-events: none;
+  z-index: 1;
 }
 
 /* ---------- GROUND TEXTURE (bg color IS the ground, seen oblique) ---------- */
@@ -308,14 +313,6 @@ section {
   width: min(92vw, 640px);
   aspect-ratio: 640 / 420;
   opacity: 0;
-  transform: translateY(-80px) scale(1.15) rotate(0deg);
-  transition: opacity 1.6s cubic-bezier(0.16, 1, 0.3, 1), transform 1.6s cubic-bezier(0.16, 1, 0.3, 1);
-  perspective: 1400px;
-}
-
-.envelope-wrap.is-visible {
-  opacity: 1;
-  transform: translateY(0) scale(1) rotate(-1.5deg);
 }
 
 .envelope {
@@ -323,33 +320,14 @@ section {
   inset: 0;
   background: #d8c39a;
   box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-  transform-style: preserve-3d;
 }
 
 .envelope-flap {
   position: absolute;
   inset: 0;
-  transform-origin: top center;
-  transform-style: preserve-3d;
-  z-index: 2;
-}
-
-.envelope-flap::before,
-.envelope-flap::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  clip-path: polygon(0 0, 100% 0, 50% 62%);
-  backface-visibility: hidden;
-}
-
-.envelope-flap::before {
   background: #c9b183;
-}
-
-.envelope-flap::after {
-  background: #b89a6d;
-  transform: rotateX(180deg);
+  clip-path: polygon(0 0, 100% 0, 50% 62%);
+  z-index: 2;
 }
 
 .seal {
@@ -364,48 +342,10 @@ section {
   cursor: pointer;
   transition: transform 0.2s ease;
   z-index: 3;
-  backface-visibility: hidden;
 }
 
 .seal:hover {
   transform: translate(-50%, -50%) scale(1.07);
-}
-
-/* breathing glow behind the seal — "this is interactive" */
-.seal::after {
-  content: '';
-  position: absolute;
-  inset: -18px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(255,214,170,0.32) 0%, rgba(255,214,170,0) 68%);
-  animation: seal-breathe 2.6s ease-in-out infinite;
-  pointer-events: none;
-  z-index: -1;
-}
-
-@keyframes seal-breathe {
-  0%, 100% { opacity: 0.35; transform: scale(0.92); }
-  50% { opacity: 1; transform: scale(1.08); }
-}
-
-.seal-hint {
-  position: absolute;
-  left: 50%;
-  bottom: -3.4rem;
-  transform: translateX(-50%);
-  margin: 0;
-  font-family: 'Caveat', cursive;
-  font-weight: 700;
-  font-size: 1.6rem;
-  color: rgba(240, 220, 190, 0.7);
-  white-space: nowrap;
-  pointer-events: none;
-  animation: hint-float 2.6s ease-in-out infinite;
-}
-
-@keyframes hint-float {
-  0%, 100% { transform: translateX(-50%) translateY(0); }
-  50% { transform: translateX(-50%) translateY(-5px); }
 }
 
 .seal-patch {
@@ -442,7 +382,7 @@ section {
   font-size: 20px;
 }
 
-/* ---------- LETTER SHEETS ---------- */
+/* ---------- LETTER SHEETS (two-page format wrapping Simon's letter PNGs) ---------- */
 
 .letter-stack {
   position: absolute;
@@ -456,11 +396,8 @@ section {
   left: 50%;
   top: 50%;
   width: min(90vw, 620px);
-  max-height: 86vh;
-  background:
-    radial-gradient(ellipse at 50% 25%, rgba(255,248,225,0.55) 0%, rgba(255,248,225,0) 65%),
-    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/></filter><rect width='240' height='240' filter='url(%23n)' opacity='0.055'/></svg>"),
-    var(--parchment);
+  max-height: 90vh;
+  background: var(--parchment);
   color: var(--parchment-ink);
   border-radius: 4px;
   box-shadow: 0 30px 80px rgba(0,0,0,0.6);
@@ -472,41 +409,45 @@ section {
 .sheet-2 { z-index: 2; }
 
 .sheet-body {
-  font-family: var(--font-hand);
-  font-size: clamp(0.95rem, 2.1vh, 1.38rem);
-  line-height: 1.9;
-  color: var(--letter-ink);
-  text-shadow: 0 0 1px rgba(43,30,18,0.25);
-  padding: 2.6rem 3rem 2.4rem;
+  padding: 1.5rem 0 0.6rem;
 }
 
-.sheet-body p + p {
-  margin-top: 1rem;
+.letter-photo-wrap {
+  position: relative;
+  line-height: 0;
 }
 
-.tw-mark {
-  font-family: 'Caveat', cursive;
-  font-weight: 700;
-  font-size: 1.25em;
-  white-space: nowrap;
-  letter-spacing: 0.04em;
+.letter-photo {
+  width: 100%;
+  height: auto;
+  display: block;
 }
 
 .fate-line {
+  position: absolute;
+  left: 5%;
+  right: 5%;
+  top: 89%;
+  height: 7%;
   cursor: pointer;
-  margin-top: 1.4rem;
 }
 
 .signoff {
+  position: absolute;
+  left: 5%;
+  right: 45%;
+  top: 7%;
+  height: 20%;
   cursor: pointer;
-  margin-top: 1.4rem;
 }
 
 .tree-seal-stamp {
   position: absolute;
-  right: 6%;
-  bottom: 1.4rem;
-  width: 120px;
+  right: 4%;
+  bottom: 3%;
+  left: auto;
+  top: auto;
+  width: 20%;
   height: auto;
   transform: rotate(-8deg);
   opacity: 0.85;
@@ -519,21 +460,20 @@ section {
 
 .thought-bubble {
   position: absolute;
-  bottom: 9%;
+  top: 0;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.3s ease, transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: opacity 0.25s ease, transform 0.25s ease;
   background: var(--parchment-ink);
   color: var(--parchment);
   border: none;
   border-radius: 60% 60% 55% 55% / 90% 90% 60% 60%;
-  padding: 1.3rem 2.4rem;
+  padding: 1.5rem 2.8rem;
   width: max-content;
   max-width: 360px;
-  font-family: var(--font-caption);
-  font-weight: 700;
+  font-family: 'SimonHandwriting', 'Cormorant Garamond', serif;
   font-style: normal;
-  font-size: 3rem;
+  font-size: 3.8rem;
   line-height: 1;
   cursor: pointer;
   white-space: nowrap;
@@ -581,24 +521,21 @@ section {
 
 /* ---------- I CHING ---------- */
 
+.sheet-2 .sheet-body {
+  font-family: 'SimonHandwriting', 'Cormorant Garamond', serif;
+  font-size: 1.9rem;
+  line-height: 1.4;
+}
+
 .fate-intro {
   opacity: 0.85;
+  padding: 0 8%;
 }
 
-.coin-toss {
-  display: flex;
-  gap: 10px;
-  justify-content: center;
-  margin: 1.2rem 0 0;
-  height: 30px;
-}
-
-.coin {
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  background: radial-gradient(at 35% 35%, #d4a466, #8a5a1e 70%, #4a2f14);
-  box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+.reading {
+  opacity: 0.9;
+  padding: 0 8%;
+  margin-bottom: 1.5rem;
 }
 
 .hexagram {
@@ -607,6 +544,7 @@ section {
   align-items: center;
   gap: 7px;
   margin: 1.5rem 0;
+  padding: 0 8%;
 }
 
 .hex-line {
@@ -619,22 +557,11 @@ section {
 .hex-line .bar {
   background: var(--parchment-ink);
   height: 100%;
-  border-radius: 1px;
-  box-shadow: 0 1px 1px rgba(43,30,18,0.25);
   transform-origin: left center;
 }
 
-.hex-line.yang .bar {
-  width: 100%;
-}
-
-.hex-line.yin .bar {
-  width: 44%;
-}
-
-.reading {
-  opacity: 0.9;
-}
+.hex-line.yang .bar { width: 100%; }
+.hex-line.yin .bar { width: 44%; }
 
 /* ---------- MAP DECOR ---------- */
 
@@ -743,7 +670,6 @@ section {
 .day-block > .polaroid, .day-block > .diary-text { z-index: 1; }
 .polaroid { position: relative; }
 .diary-text { position: relative; }
-.envelope-wrap { z-index: 1; }
 
 /* ---------- PARTICLES ---------- */
 
@@ -1003,16 +929,15 @@ section {
   .diary-text p { font-size: 1.15rem; }
   .polaroid { width: 280px; }
   .polaroid.has-photo { padding: 11px 11px 54px 11px; }
-  .polaroid.has-photo .polaroid-tag { height: 54px; font-size: 1.2rem; left: 11px; right: 11px; }
-  .sheet { width: 92vw; }
-  .sheet-body { font-size: clamp(0.9rem, 1.9vh, 1.05rem); padding: 1.8rem 1.5rem 1.6rem; }
-  .tree-seal-stamp { width: 90px; }
-  .thought-bubble { max-width: 240px; font-size: 2.2rem; padding: 1rem 1.8rem; }
+  .polaroid.has-photo .polaroid-tag { height: 54px; font-size: 1.4rem; left: 11px; right: 11px; }
+  .letter-inner { font-size: 1.2rem; }
+  .letter-continued { font-size: 1.4rem; }
+  .fate-intro, .reading, .hexagram { padding: 0 5%; }
+  .thought-bubble { max-width: 240px; font-size: 2.8rem; padding: 1.1rem 2rem; }
   .thought-bubble.bubble-right, .thought-bubble.bubble-left {
     left: auto;
     right: auto;
     top: -2.8rem;
-    bottom: auto;
     margin: 0;
   }
   .thought-bubble.bubble-right { right: 0.5rem; }

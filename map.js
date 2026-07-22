@@ -4,7 +4,7 @@
 (async function () {
   const NS = 'http://www.w3.org/2000/svg';
 
-  const svgText = await fetch('sprites.svg?v=7').then((r) => r.text());
+  const svgText = await fetch('sprites.svg?v=8').then((r) => r.text());
   const mount = document.createElement('div');
   mount.setAttribute('aria-hidden', 'true');
   mount.style.cssText = 'position:absolute;width:0;height:0;overflow:hidden';
@@ -24,6 +24,7 @@
     'wine-bottle': [24, 60],
     'porch': [200, 170], 'ledge': [400, 80], 'lake-shore': [240, 70],
     'wildflower': [50, 40], 'pumpkin-cluster': [90, 50], 'owl': [50, 60],
+    'bushy-tree': [200, 260], 'firepit': [100, 70], 'human-dance': [40, 80],
   };
 
   const DAY_ZONE = { 1: 'predawn', 2: 'dawn', 3: 'day', 4: 'golden', 5: 'golden', 6: 'dusk', 7: 'night2' };
@@ -303,16 +304,20 @@
     { sec: '#hero', zone: 'night', layer: 'far', sym: 'treeline-far', x: 32, b: -3, w: 560, o: 0.9, flip: true },
     { sec: '#hero', zone: 'night', layer: 'far', sym: 'treeline-far', x: 70, b: -3, w: 560, o: 0.9 },
 
-    // fire scene — framing firs, bench + folks on the left, owl perched on the big fir
+    // fire scene — framing firs, big bushy tree behind, firepit centered, dancers ringing the flames
     { sec: '#fire-scene', zone: 'night', layer: 'near', sym: 'fir-1', x: -3, b: 0, w: 230 },
-    { sec: '#fire-scene', zone: 'night', layer: 'near', sym: 'owl', x: 6.5, b: 52, w: 40 },
     { sec: '#fire-scene', zone: 'night', layer: 'near', sym: 'fir-2', x: 88, b: 0, w: 200, flip: true },
-    { sec: '#fire-scene', zone: 'night', layer: 'mid', sym: 'fir-3', x: 8, b: 4, w: 90 },
-    { sec: '#fire-scene', zone: 'night', layer: 'mid', sym: 'log-bench', x: 16, b: 4, w: 140 },
-    { sec: '#fire-scene', zone: 'night', layer: 'mid', sym: 'human-sit', x: 20, b: 8, w: 48,
-      fx: [{ cls: 'fire-rim', x: 0.62, y: 0.12 }] },
-    { sec: '#fire-scene', zone: 'night', layer: 'mid', sym: 'human-sit', x: 27, b: 8, w: 44, flip: true,
-      fx: [{ cls: 'fire-rim', x: 0.62, y: 0.12 }] },
+    { sec: '#fire-scene', zone: 'night', layer: 'far', sym: 'treeline-far', x: 0, b: 4, w: 560, o: 0.55 },
+    { sec: '#fire-scene', zone: 'night', layer: 'far', sym: 'treeline-far', x: 100, b: 4, w: 560, o: 0.5, flip: true },
+    { sec: '#fire-scene', zone: 'night', layer: 'mid', sym: 'bushy-tree', x: 50, cx: true, b: 8, w: 520 },
+    { sec: '#fire-scene', zone: 'night', layer: 'near', sym: 'firepit', x: 50, cx: true, b: 6, w: 200,
+      fx: [{ cls: 'firepit-glow', x: 0.5, y: 0.4 }] },
+    { sec: '#fire-scene', zone: 'night', layer: 'near', sym: 'human-dance', x: 30, cx: true, b: 5, w: 68,
+      fx: [{ cls: 'fire-rim', x: 0.7, y: 0.15 }] },
+    { sec: '#fire-scene', zone: 'night', layer: 'near', sym: 'human-dance', x: 40, cx: true, b: 4, w: 62, flip: true },
+    { sec: '#fire-scene', zone: 'night', layer: 'near', sym: 'human-dance', x: 60, cx: true, b: 4, w: 62,
+      fx: [{ cls: 'fire-rim', x: 0.15, y: 0.15 }] },
+    { sec: '#fire-scene', zone: 'night', layer: 'near', sym: 'human-dance', x: 70, cx: true, b: 5, w: 68, flip: true },
 
     // day 1 — LEFT block, predawn. Arrival goodies in the right margin strip.
     { day: 1, layer: 'mid', sym: 'signpost', x: 87, b: 10, w: 84 },
@@ -405,7 +410,10 @@
     if (item.bpx != null) el.style.bottom = item.bpx + 'px';
     else el.style.bottom = (item.b || 0) + '%';
     if (item.o != null) el.style.opacity = item.o;
-    if (item.flip) el.style.transform = 'scaleX(-1)';
+    const tx = [];
+    if (item.cx) tx.push('translateX(-50%)');
+    if (item.flip) tx.push('scaleX(-1)');
+    if (tx.length) el.style.transform = tx.join(' ');
     container.appendChild(el);
     // fx: effect overlays (smoke, glow, leaves, tail) anchored to the sprite.
     // f.x / f.y are fractions of sprite width/height in screen space, from bottom-left.

@@ -43,7 +43,6 @@ ScrollTrigger.create({
 const revealTargets = [
   ...document.querySelectorAll('.polaroid'),
   document.querySelector('.fire-scene .scene'),
-  document.getElementById('envelope-wrap'),
 ].filter(Boolean);
 
 const revealObserver = new IntersectionObserver((entries) => {
@@ -57,6 +56,22 @@ const revealObserver = new IntersectionObserver((entries) => {
 
 for (const el of revealTargets) revealObserver.observe(el);
 
+const envelopeWrap = document.getElementById('envelope-wrap');
+const letterScene = document.getElementById('letter-scene');
+const envelopeObserver = new IntersectionObserver((entries) => {
+  for (const entry of entries) {
+    if (entry.isIntersecting) {
+      envelopeObserver.disconnect();
+      gsap.set(envelopeWrap, { scale: 3.2, y: -80, opacity: 0, rotation: 0 });
+      gsap.to(envelopeWrap, {
+        opacity: 1, scale: 1, y: 0, rotation: -2.5,
+        duration: 1.5, ease: 'bounce.out',
+      });
+    }
+  }
+}, { rootMargin: '0px 0px -10% 0px', threshold: 0 });
+envelopeObserver.observe(letterScene);
+
 const seal = document.getElementById('seal');
 const sheet1 = document.getElementById('sheet-1');
 const sheet2 = document.getElementById('sheet-2');
@@ -69,17 +84,40 @@ const readingEl = document.getElementById('reading');
 
 gsap.set([sheet1, sheet2], { xPercent: -50, yPercent: -50 });
 
+function positionBubble(bubble, anchorEl, verticalBias) {
+  if (!bubble || !anchorEl) return;
+  const sheet = bubble.closest('.sheet');
+  if (!sheet) return;
+  const sheetRect = sheet.getBoundingClientRect();
+  const anchorRect = anchorEl.getBoundingClientRect();
+  const anchorMidY = anchorRect.top - sheetRect.top + anchorRect.height / 2;
+  const pointerReach = 38;
+  const top = anchorMidY - bubble.offsetHeight - pointerReach + (verticalBias || 0);
+  bubble.style.top = top + 'px';
+}
+
+function whenImageReady(img, cb) {
+  if (!img) return;
+  if (img.complete && img.naturalWidth > 0) cb();
+  else img.addEventListener('load', cb);
+}
+
+const topLetterImg = sheet1.querySelector('.letter-photo');
+whenImageReady(topLetterImg, () => positionBubble(fateBubble, fateLine, -20));
+window.addEventListener('resize', () => {
+  positionBubble(fateBubble, fateLine, -20);
+  positionBubble(acceptBubble, signoff, -20);
+});
+if (window.ResizeObserver) {
+  new ResizeObserver(() => positionBubble(fateBubble, fateLine, -20)).observe(sheet1);
+  new ResizeObserver(() => positionBubble(acceptBubble, signoff, -20)).observe(sheet2);
+}
+
 seal.addEventListener('click', () => {
-  gsap.to('.seal-hint', { opacity: 0, duration: 0.3 });
   const tl = gsap.timeline();
-  tl.to('.envelope-flap', {
-      rotateX: -165,
-      duration: 0.9,
-      ease: 'power3.inOut',
-    })
-    .fromTo(sheet1, {
+  tl.fromTo(sheet1, {
       y: () => window.innerHeight * 0.3,
-      scale: 0.75,
+      scale: 0.85,
       rotation: 2,
       autoAlpha: 0,
     }, {
@@ -87,9 +125,10 @@ seal.addEventListener('click', () => {
       scale: 1,
       rotation: 0,
       autoAlpha: 1,
-      duration: 1.0,
+      duration: 0.9,
       ease: 'back.out(1.15)',
-    }, '-=0.25')
+      onComplete: () => positionBubble(fateBubble, fateLine, -20),
+    })
     .to('#envelope-wrap', {
       opacity: 0.25,
       y: 30,
@@ -97,7 +136,8 @@ seal.addEventListener('click', () => {
       duration: 0.5,
     }, '<')
     .call(() => {
-      gsap.delayedCall(0.6, () => fateBubble.classList.add('shown'));
+      gsap.delayedCall(0.6, () => positionBubble(fateBubble, fateLine, -20));
+      gsap.delayedCall(3, () => fateBubble.classList.add('shown'));
     });
 }, { once: true });
 
@@ -262,21 +302,16 @@ fateBubble.addEventListener('click', () => {
   const interpretation = hexagramReadings[match.number];
   readingEl.textContent = `This is the I Ching hexagram ${match.number}: ${match.name}. It means: ${interpretation}`;
 
-  const coinContainer = document.createElement('div');
-  coinContainer.className = 'coin-toss';
-  for (let i = 0; i < 6; i++) {
-    const coin = document.createElement('span');
-    coin.className = 'coin';
-    coinContainer.appendChild(coin);
-  }
-  hexagramEl.parentNode.insertBefore(coinContainer, hexagramEl);
-
   gsap.set('.hex-line .bar', { scaleX: 0 });
   gsap.set(readingEl, { opacity: 0, y: 8 });
 
   const tl = gsap.timeline({
     onComplete: () => {
-      gsap.delayedCall(0.4, () => acceptBubble.classList.add('shown'));
+      const bottomLetterImg = sheet2.querySelector('.letter-signoff-wrap .letter-photo');
+      whenImageReady(bottomLetterImg, () => {
+        requestAnimationFrame(() => requestAnimationFrame(() => positionBubble(acceptBubble, signoff, -20)));
+      });
+      gsap.delayedCall(2.5, () => acceptBubble.classList.add('shown'));
     },
   });
 
@@ -302,20 +337,10 @@ fateBubble.addEventListener('click', () => {
       duration: 0.9,
       ease: 'back.out(1.1)',
     }, '-=0.35')
-    .from('.coin', {
-      y: -60,
-      opacity: 0,
-      rotation: 'random(-180, 180)',
-      stagger: 0.08,
-      ease: 'bounce.out',
-      duration: 0.9,
-    })
-    .to('.coin', { opacity: 0, duration: 0.3 }, '+=0.3')
-    .to(coinContainer, { height: 0, margin: 0, duration: 0.3 }, '<')
     .to('.hex-line .bar', {
       scaleX: 1,
       stagger: 0.09,
-      duration: 0.18,
+      duration: 0.2,
       ease: 'power2.out',
     }, '-=0.15')
     .to(readingEl, {
