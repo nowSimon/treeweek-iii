@@ -40,6 +40,34 @@ ScrollTrigger.create({
   },
 });
 
+/* Camera descent: pin hero for 50vh of scroll while the title lifts out of the
+   frame and the fire scene rises up from below into the bottom of the viewport.
+   The starry sky (attached to <body>) stays behind as the tree grows into it. */
+{
+  const heroTl = gsap.timeline({
+    scrollTrigger: {
+      trigger: '#hero',
+      start: 'top top',
+      end: '+=50%',
+      pin: true,
+      pinSpacing: true,
+      scrub: 0.35,
+      anticipatePin: 1,
+      invalidateOnRefresh: true,
+    },
+  });
+  heroTl.fromTo('.hero h1', { y: 0, opacity: 1 }, { y: '-30vh', opacity: 0, ease: 'none' }, 0);
+  heroTl.fromTo('.hero-sub', { y: 0, opacity: 1 }, { y: '-35vh', opacity: 0, ease: 'none' }, 0);
+  heroTl.to('.scroll-prompt', { opacity: 0, ease: 'none' }, 0);
+  // Fire scene's natural top sits at doc-y = 100vh (right after hero). During the
+  // pin, viewport = [0, 100vh], so natural fire-scene is entirely below viewport.
+  // We tween it up by 100vh over the pin so its top ends up at viewport y=0,
+  // meaning the section (100vh tall, content at bottom) fills the viewport with
+  // scene content in the lower 72vh — sky decor from the pinned hero shows
+  // through the empty upper 28vh where fire-scene is transparent.
+  heroTl.fromTo('#fire-scene', { y: 0 }, { y: '-100vh', ease: 'none' }, 0);
+}
+
 const revealTargets = [
   ...document.querySelectorAll('.polaroid'),
   document.querySelector('.fire-scene .scene'),

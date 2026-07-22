@@ -35,8 +35,11 @@ body {
   position: fixed;
   inset: 0;
   z-index: -1;
-  background: var(--bg-color, #050912);
+  background:
+    linear-gradient(180deg, rgba(5,9,18,0.35) 0%, rgba(5,9,18,0.6) 60%, rgba(5,9,18,0.9) 100%),
+    url('assets/starry-sky.jpg') center 20% / cover no-repeat;
   transition: background 0.05s linear;
+  pointer-events: none;
 }
 
 body {
@@ -56,9 +59,24 @@ section {
 /* ---------- HERO ---------- */
 
 .hero {
-  background:
-    linear-gradient(180deg, rgba(5,9,18,0.35) 0%, rgba(5,9,18,0.65) 70%, rgba(5,9,18,1) 100%),
-    url('assets/starry-sky.jpg') center 30% / cover no-repeat;
+  background: transparent;
+  z-index: 1;
+}
+
+.fire-scene {
+  z-index: 2;
+}
+
+.diary {
+  background: linear-gradient(180deg, rgba(5,9,18,0.85) 0%, rgba(5,9,18,1) 6%, rgba(5,9,18,1) 100%);
+  position: relative;
+  z-index: 3;
+}
+
+.letter-scene {
+  background: rgba(5,9,18,1);
+  position: relative;
+  z-index: 3;
 }
 
 .hero h1 {

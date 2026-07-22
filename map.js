@@ -306,8 +306,7 @@
 
     // fire scene — firelit clearing: big oak behind the bonfire, dancers ringing it,
     // owl on the left fir, log-bench vignette with two sitters
-    { sec: '#fire-scene', zone: 'firelit', layer: 'far', sym: 'treeline-far', x: 0, b: 3, w: 620, wm: 400, o: 0.55 },
-    { sec: '#fire-scene', zone: 'firelit', layer: 'far', sym: 'treeline-far', x: 100, b: 3, w: 620, wm: 400, o: 0.5, flip: true },
+    // (no treeline-far here — hero's treeline serves as the horizon backdrop during descent)
     { sec: '#fire-scene', zone: 'firelit', layer: 'mid', sym: 'bushy-tree', x: 50, cx: true, b: 8, w: 620, wm: 340 },
     { sec: '#fire-scene', zone: 'firelit', layer: 'near', sym: 'fir-1', x: -3, b: 0, w: 240, wm: 150 },
     { sec: '#fire-scene', zone: 'firelit', layer: 'near', sym: 'owl', x: 6, b: 30, w: 46, wm: 30 },
