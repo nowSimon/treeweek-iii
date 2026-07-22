@@ -104,13 +104,13 @@ section {
 
 .firepit-glow {
   position: absolute;
-  width: 640px;
-  height: 640px;
+  width: min(720px, 92vw);
+  aspect-ratio: 1 / 1;
   transform: translate(-50%, 50%);
   background: radial-gradient(circle at center,
-    rgba(255,196,120,0.55) 0%,
-    rgba(255,138,60,0.28) 22%,
-    rgba(255,110,50,0.08) 45%,
+    rgba(255,196,120,0.6) 0%,
+    rgba(255,138,60,0.32) 22%,
+    rgba(255,110,50,0.1) 45%,
     transparent 65%);
   mix-blend-mode: screen;
   pointer-events: none;
@@ -571,6 +571,12 @@ section {
   --s-light: #1c2742;
   --s-rim:   rgba(157,180,212,0.5);
   --s-glow:  #ffcf8f;
+}
+.zone-tint[data-zone="firelit"] {
+  --s-dark:  #182138;
+  --s-mid:   #263354;
+  --s-light: #364a74;
+  --s-rim:   rgba(255,199,145,0.6);
 }
 .zone-tint[data-zone="predawn"] {
   --s-dark:  #0d1424;

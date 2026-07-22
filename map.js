@@ -4,7 +4,7 @@
 (async function () {
   const NS = 'http://www.w3.org/2000/svg';
 
-  const svgText = await fetch('sprites.svg?v=8').then((r) => r.text());
+  const svgText = await fetch('sprites.svg?v=9').then((r) => r.text());
   const mount = document.createElement('div');
   mount.setAttribute('aria-hidden', 'true');
   mount.style.cssText = 'position:absolute;width:0;height:0;overflow:hidden';
@@ -24,7 +24,7 @@
     'wine-bottle': [24, 60],
     'porch': [200, 170], 'ledge': [400, 80], 'lake-shore': [240, 70],
     'wildflower': [50, 40], 'pumpkin-cluster': [90, 50], 'owl': [50, 60],
-    'bushy-tree': [200, 260], 'firepit': [100, 70], 'human-dance': [40, 80],
+    'bushy-tree': [220, 270], 'firepit': [100, 90], 'human-dance': [44, 80], 'human-dance-2': [44, 80],
   };
 
   const DAY_ZONE = { 1: 'predawn', 2: 'dawn', 3: 'day', 4: 'golden', 5: 'golden', 6: 'dusk', 7: 'night2' };
@@ -304,20 +304,28 @@
     { sec: '#hero', zone: 'night', layer: 'far', sym: 'treeline-far', x: 32, b: -3, w: 560, o: 0.9, flip: true },
     { sec: '#hero', zone: 'night', layer: 'far', sym: 'treeline-far', x: 70, b: -3, w: 560, o: 0.9 },
 
-    // fire scene — framing firs, big bushy tree behind, firepit centered, dancers ringing the flames
-    { sec: '#fire-scene', zone: 'night', layer: 'near', sym: 'fir-1', x: -3, b: 0, w: 230 },
-    { sec: '#fire-scene', zone: 'night', layer: 'near', sym: 'fir-2', x: 88, b: 0, w: 200, flip: true },
-    { sec: '#fire-scene', zone: 'night', layer: 'far', sym: 'treeline-far', x: 0, b: 4, w: 560, o: 0.55 },
-    { sec: '#fire-scene', zone: 'night', layer: 'far', sym: 'treeline-far', x: 100, b: 4, w: 560, o: 0.5, flip: true },
-    { sec: '#fire-scene', zone: 'night', layer: 'mid', sym: 'bushy-tree', x: 50, cx: true, b: 8, w: 520 },
-    { sec: '#fire-scene', zone: 'night', layer: 'near', sym: 'firepit', x: 50, cx: true, b: 6, w: 200,
-      fx: [{ cls: 'firepit-glow', x: 0.5, y: 0.4 }] },
-    { sec: '#fire-scene', zone: 'night', layer: 'near', sym: 'human-dance', x: 30, cx: true, b: 5, w: 68,
-      fx: [{ cls: 'fire-rim', x: 0.7, y: 0.15 }] },
-    { sec: '#fire-scene', zone: 'night', layer: 'near', sym: 'human-dance', x: 40, cx: true, b: 4, w: 62, flip: true },
-    { sec: '#fire-scene', zone: 'night', layer: 'near', sym: 'human-dance', x: 60, cx: true, b: 4, w: 62,
-      fx: [{ cls: 'fire-rim', x: 0.15, y: 0.15 }] },
-    { sec: '#fire-scene', zone: 'night', layer: 'near', sym: 'human-dance', x: 70, cx: true, b: 5, w: 68, flip: true },
+    // fire scene — firelit clearing: big oak behind the bonfire, dancers ringing it,
+    // owl on the left fir, log-bench vignette with two sitters
+    { sec: '#fire-scene', zone: 'firelit', layer: 'far', sym: 'treeline-far', x: 0, b: 4, w: 560, wm: 360, o: 0.6 },
+    { sec: '#fire-scene', zone: 'firelit', layer: 'far', sym: 'treeline-far', x: 100, b: 4, w: 560, wm: 360, o: 0.55, flip: true },
+    { sec: '#fire-scene', zone: 'firelit', layer: 'mid', sym: 'bushy-tree', x: 50, cx: true, b: 6, w: 460, wm: 280 },
+    { sec: '#fire-scene', zone: 'firelit', layer: 'near', sym: 'fir-1', x: -3, b: 0, w: 230, wm: 150 },
+    { sec: '#fire-scene', zone: 'firelit', layer: 'near', sym: 'owl', x: 6.5, b: 52, w: 40, wm: 28 },
+    { sec: '#fire-scene', zone: 'firelit', layer: 'near', sym: 'fir-2', x: 88, b: 0, w: 200, wm: 130, flip: true },
+    { sec: '#fire-scene', zone: 'firelit', layer: 'near', sym: 'fir-3', x: 8, b: 4, w: 90, wm: 60 },
+    { sec: '#fire-scene', zone: 'firelit', layer: 'near', sym: 'log-bench', x: 16, b: 4, w: 140, wm: 90 },
+    { sec: '#fire-scene', zone: 'firelit', layer: 'near', sym: 'human-sit', x: 20, b: 8, w: 48, wm: 32,
+      fx: [{ cls: 'fire-rim', x: 0.7, y: 0.2 }] },
+    { sec: '#fire-scene', zone: 'firelit', layer: 'near', sym: 'human-sit', x: 27, b: 8, w: 44, wm: 28, flip: true,
+      fx: [{ cls: 'fire-rim', x: 0.3, y: 0.2 }] },
+    { sec: '#fire-scene', zone: 'firelit', layer: 'near', sym: 'firepit', x: 50, cx: true, b: 4, w: 190, wm: 120,
+      fx: [{ cls: 'firepit-glow', x: 0.5, y: 0.35 }] },
+    { sec: '#fire-scene', zone: 'firelit', layer: 'near', sym: 'human-dance', x: 34, cx: true, b: 5, w: 66, wm: 42,
+      fx: [{ cls: 'fire-rim', x: 0.75, y: 0.15 }] },
+    { sec: '#fire-scene', zone: 'firelit', layer: 'near', sym: 'human-dance-2', x: 42, cx: true, b: 3, w: 60, wm: 38 },
+    { sec: '#fire-scene', zone: 'firelit', layer: 'near', sym: 'human-dance-2', x: 58, cx: true, b: 3, w: 60, wm: 38, flip: true },
+    { sec: '#fire-scene', zone: 'firelit', layer: 'near', sym: 'human-dance', x: 67, cx: true, b: 5, w: 66, wm: 42, flip: true,
+      fx: [{ cls: 'fire-rim', x: 0.25, y: 0.15 }] },
 
     // day 1 — LEFT block, predawn. Arrival goodies in the right margin strip.
     { day: 1, layer: 'mid', sym: 'signpost', x: 87, b: 10, w: 84 },
@@ -396,6 +404,9 @@
   ];
 
   function placeInto(container, item, blk, geom) {
+    const mobile = geom.w < 520;
+    const w = mobile && item.wm != null ? item.wm : item.w;
+    item = { ...item, w };
     const el = makeSprite(item.sym, item.w);
     if (blk && item.onPath) {
       const blockH = blk.rect.bottom - blk.rect.top;
@@ -428,7 +439,8 @@
           const [fvw, fvh] = DIMS[f.sym];
           d.innerHTML = `<svg viewBox="0 0 ${fvw} ${fvh}" width="${f.w}" height="${(f.w * fvh / fvw).toFixed(1)}"><use href="#${f.sym}"></use></svg>`;
         }
-        d.style.left = `calc(${el.style.left} + ${(f.x * item.w).toFixed(1)}px)`;
+        const fxOff = (item.cx ? f.x - 0.5 : f.x) * item.w;
+        d.style.left = `calc(${el.style.left} + ${fxOff.toFixed(1)}px)`;
         d.style.bottom = `calc(${el.style.bottom} + ${(f.y * h).toFixed(1)}px)`;
         container.appendChild(d);
       }
