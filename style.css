@@ -35,10 +35,7 @@ body {
   position: fixed;
   inset: 0;
   z-index: -1;
-  background:
-    linear-gradient(180deg, rgba(5,9,18,0.35) 0%, rgba(5,9,18,0.6) 60%, rgba(5,9,18,0.9) 100%),
-    url('assets/starry-sky.jpg') center 20% / cover no-repeat;
-  transition: background 0.05s linear;
+  background: #050912;
   pointer-events: none;
 }
 
@@ -59,24 +56,42 @@ section {
 /* ---------- HERO ---------- */
 
 .hero {
-  background: transparent;
+  background:
+    linear-gradient(180deg, rgba(5,9,18,0.1) 0%, rgba(5,9,18,0.3) 55%, rgba(5,9,18,0.8) 100%),
+    url('assets/starry-sky.jpg') center 20% / cover no-repeat;
   z-index: 1;
+}
+
+/* Deep-forest ground: fills the space between the far and near treeline bases
+   so the two silhouettes read as sitting on the same hillside, not floating.
+   Transparent at the top (blends with the sky), solidifies through the forest
+   band, ends fully opaque at the very bottom of the hero. */
+.hero::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 42%;
+  background: linear-gradient(180deg,
+    rgba(4,7,13,0) 0%,
+    rgba(4,7,13,0.35) 18%,
+    rgba(4,7,13,0.72) 42%,
+    rgba(3,6,11,0.95) 70%,
+    rgba(2,4,9,1) 100%);
+  z-index: 0;
+  pointer-events: none;
 }
 
 .fire-scene {
   z-index: 2;
 }
 
-.diary {
-  background: linear-gradient(180deg, rgba(5,9,18,0.85) 0%, rgba(5,9,18,1) 6%, rgba(5,9,18,1) 100%);
-  position: relative;
-  z-index: 3;
-}
-
+.diary,
 .letter-scene {
-  background: rgba(5,9,18,1);
   position: relative;
   z-index: 3;
+  background: transparent;
 }
 
 .hero h1 {

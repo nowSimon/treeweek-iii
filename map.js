@@ -300,9 +300,13 @@
   const P = [
     // hero — night sky
     { sec: '#hero', zone: 'night', layer: 'far', sym: 'moon', x: 72, b: 58, w: 92 },
-    { sec: '#hero', zone: 'night', layer: 'far', sym: 'treeline-far', x: -6, b: -3, w: 560, o: 0.9 },
-    { sec: '#hero', zone: 'night', layer: 'far', sym: 'treeline-far', x: 32, b: -3, w: 560, o: 0.9, flip: true },
-    { sec: '#hero', zone: 'night', layer: 'far', sym: 'treeline-far', x: 70, b: -3, w: 560, o: 0.9 },
+    // deep forest backdrop — near treeline layered over a far one for depth,
+    // riding a little above the very bottom so the fire-scene ground sits below it
+    { sec: '#hero', zone: 'night', layer: 'far', sym: 'treeline-far', x: -6, b: 24, w: 720, wm: 460, o: 0.85 },
+    { sec: '#hero', zone: 'night', layer: 'far', sym: 'treeline-far', x: 40, b: 26, w: 720, wm: 460, o: 0.85, flip: true },
+    { sec: '#hero', zone: 'night', layer: 'far', sym: 'treeline-far', x: 68, b: 24, w: 720, wm: 460, o: 0.85 },
+    { sec: '#hero', zone: 'night', layer: 'mid', sym: 'treeline-near', x: -8, b: 14, w: 900, wm: 520, o: 0.95 },
+    { sec: '#hero', zone: 'night', layer: 'mid', sym: 'treeline-near', x: 55, b: 14, w: 900, wm: 520, o: 0.95, flip: true },
 
     // fire scene — firelit clearing: big oak behind the bonfire, dancers ringing it,
     // owl on the left fir, log-bench vignette with two sitters

@@ -30,6 +30,9 @@ function colorAt(t) {
   return `rgb(5,9,18)`;
 }
 
+/* Day-cycle: bg-glow (fixed layer behind everything) tints from night through
+   dawn/day/dusk as the user scrolls through the diary. The starry sky lives on
+   .hero itself now, so this doesn't fight with the sky image. */
 ScrollTrigger.create({
   trigger: '#diary',
   start: 'top bottom',
@@ -48,24 +51,24 @@ ScrollTrigger.create({
     scrollTrigger: {
       trigger: '#hero',
       start: 'top top',
-      end: '+=50%',
+      end: '+=100%',
       pin: true,
-      pinSpacing: true,
+      pinSpacing: false,
       scrub: 0.35,
       anticipatePin: 1,
       invalidateOnRefresh: true,
     },
   });
-  heroTl.fromTo('.hero h1', { y: 0, opacity: 1 }, { y: '-30vh', opacity: 0, ease: 'none' }, 0);
-  heroTl.fromTo('.hero-sub', { y: 0, opacity: 1 }, { y: '-35vh', opacity: 0, ease: 'none' }, 0);
+  // pinSpacing: false — doc scroll advances naturally under the pinned hero,
+  // so fire-scene rides up 1:1 with scroll and there's no orphaned empty space
+  // between fire-scene and diary at pin release.
+  heroTl.fromTo('.hero h1', { y: 0, opacity: 1 }, { y: '-40vh', opacity: 0, ease: 'none' }, 0, 0);
+  heroTl.fromTo('.hero-sub', { y: 0, opacity: 1 }, { y: '-45vh', opacity: 0, ease: 'none' }, 0, 0);
   heroTl.to('.scroll-prompt', { opacity: 0, ease: 'none' }, 0);
-  // Fire scene's natural top sits at doc-y = 100vh (right after hero). During the
-  // pin, viewport = [0, 100vh], so natural fire-scene is entirely below viewport.
-  // We tween it up by 100vh over the pin so its top ends up at viewport y=0,
-  // meaning the section (100vh tall, content at bottom) fills the viewport with
-  // scene content in the lower 72vh — sky decor from the pinned hero shows
-  // through the empty upper 28vh where fire-scene is transparent.
-  heroTl.fromTo('#fire-scene', { y: 0 }, { y: '-100vh', ease: 'none' }, 0);
+  // Small negative translate so fire-scene stops rising a bit above viewport
+  // bottom — leaves a strip of the pinned hero visible (treeline + dark forest)
+  // for a "the scene sits in a clearing behind the deep forest" read.
+  heroTl.fromTo('#fire-scene', { y: 0 }, { y: '-10vh', ease: 'none' }, 0);
 }
 
 const revealTargets = [
