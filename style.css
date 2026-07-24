@@ -29,6 +29,12 @@ body {
   font-family: 'Cormorant Garamond', serif;
   overflow-x: hidden;
   scroll-behavior: smooth;
+  /* Scroll anchoring auto-adjusts scroll position when it detects content
+     shifting near the viewport, to prevent visual jumps — but on a page this
+     dynamic (reveal transitions, IntersectionObserver toggles all firing in
+     clusters at section boundaries) its own heuristics can misfire and cause
+     the exact jump it's meant to prevent. Nothing on this page needs it. */
+  overflow-anchor: none;
 }
 
 #bg-glow {
