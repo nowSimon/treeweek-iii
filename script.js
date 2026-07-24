@@ -1,5 +1,22 @@
 gsap.registerPlugin(ScrollTrigger);
 
+// iOS Safari/Brave fire a resize event when the address bar hides/shows
+// mid-scroll — same width, different height. Without ignoreMobileResize,
+// ScrollTrigger's own internal logic treats that like a real resize and
+// re-measures every registered trigger's position, independent of whether
+// anything is pinned. That's a full page-wide recalculation happening while
+// the user may still be actively scrolling — a real, plausible cause of felt
+// "snapping." All section sizing is in svh now (stable across address-bar
+// state) specifically so there's nothing that actually needs re-measuring
+// when only the height changes, on mobile or desktop.
+ScrollTrigger.config({ ignoreMobileResize: true });
+// normalizeScroll(true) was here to keep the pinned hero smooth on mobile, but
+// the pin itself is now disabled on mobile entirely (see matchMedia below), so
+// it's no longer fixing anything. It works by replacing native OS-driven
+// momentum scrolling with a JS/RAF-simulated one, which is exactly the kind of
+// mechanism that could cost more than it saves on a page this content-heavy —
+// removed as a test since jank was reported starting right at gesture start.
+
 const bgGlow = document.getElementById('bg-glow');
 
 const colorStops = [
@@ -13,63 +30,79 @@ const colorStops = [
   { t: 1.0, c: [5, 9, 18] },
 ];
 
-function lerp(a, b, t) { return a + (b - a) * t; }
+/* Day-cycle: bg-glow tints from night through dawn/day/dusk as the user scrolls
+   through the diary. Previously this set `background` directly every scroll
+   tick — `background` isn't a compositable property, so that forced a full-
+   viewport repaint on every frame (a real mobile jank source), even throttled.
+   Instead: stack one solid-color layer per color stop and crossfade between
+   the current pair with `opacity`, which the GPU composites with zero repaint. */
+const bgLayers = colorStops.map(({ c }) => {
+  const layer = document.createElement('div');
+  layer.className = 'bg-glow-layer';
+  layer.style.background = `rgb(${c[0]}, ${c[1]}, ${c[2]})`;
+  layer.style.opacity = '0';
+  bgGlow.appendChild(layer);
+  return layer;
+});
+bgLayers[0].style.opacity = '1';
 
-function colorAt(t) {
+function setBgProgress(t) {
+  let idx = colorStops.length - 2;
   for (let i = 0; i < colorStops.length - 1; i++) {
-    const a = colorStops[i];
-    const b = colorStops[i + 1];
-    if (t >= a.t && t <= b.t) {
-      const localT = (t - a.t) / (b.t - a.t);
-      const r = lerp(a.c[0], b.c[0], localT);
-      const g = lerp(a.c[1], b.c[1], localT);
-      const bch = lerp(a.c[2], b.c[2], localT);
-      return `rgb(${r | 0}, ${g | 0}, ${bch | 0})`;
-    }
+    if (t >= colorStops[i].t && t <= colorStops[i + 1].t) { idx = i; break; }
   }
-  return `rgb(5,9,18)`;
+  const a = colorStops[idx], b = colorStops[idx + 1];
+  const localT = (t - a.t) / (b.t - a.t);
+  bgLayers.forEach((layer, i) => {
+    layer.style.opacity = i === idx ? 1 - localT : i === idx + 1 ? localT : 0;
+  });
 }
 
-/* Day-cycle: bg-glow (fixed layer behind everything) tints from night through
-   dawn/day/dusk as the user scrolls through the diary. The starry sky lives on
-   .hero itself now, so this doesn't fight with the sky image. */
 ScrollTrigger.create({
   trigger: '#diary',
   start: 'top bottom',
   end: 'bottom top',
-  onUpdate: (self) => {
-    bgGlow.style.setProperty('--bg-color', colorAt(self.progress));
-    bgGlow.style.background = colorAt(self.progress);
-  },
+  onUpdate: (self) => setBgProgress(self.progress),
 });
 
 /* Camera descent: pin hero for 50vh of scroll while the title lifts out of the
    frame and the fire scene rises up from below into the bottom of the viewport.
-   The starry sky (attached to <body>) stays behind as the tree grows into it. */
-{
-  const heroTl = gsap.timeline({
-    scrollTrigger: {
-      trigger: '#hero',
-      start: 'top top',
-      end: '+=100%',
-      pin: true,
-      pinSpacing: false,
-      scrub: 0.35,
-      anticipatePin: 1,
-      invalidateOnRefresh: true,
-    },
-  });
-  // pinSpacing: false — doc scroll advances naturally under the pinned hero,
-  // so fire-scene rides up 1:1 with scroll and there's no orphaned empty space
-  // between fire-scene and diary at pin release.
-  heroTl.fromTo('.hero h1', { y: 0, opacity: 1 }, { y: '-40vh', opacity: 0, ease: 'none' }, 0, 0);
-  heroTl.fromTo('.hero-sub', { y: 0, opacity: 1 }, { y: '-45vh', opacity: 0, ease: 'none' }, 0, 0);
-  heroTl.to('.scroll-prompt', { opacity: 0, ease: 'none' }, 0);
-  // Small negative translate so fire-scene stops rising a bit above viewport
-  // bottom — leaves a strip of the pinned hero visible (treeline + dark forest)
-  // for a "the scene sits in a clearing behind the deep forest" read.
-  heroTl.fromTo('#fire-scene', { y: 0 }, { y: '-10vh', ease: 'none' }, 0);
-}
+   The starry sky (attached to <body>) stays behind as the tree grows into it.
+   Pinning is desktop-only — iOS WebKit (Safari and Brave both run on it) resizes
+   the viewport mid-scroll as the address bar collapses, which fights pinned
+   ScrollTriggers. Phones get a simpler unpinned parallax instead of a jankier
+   version of the same effect. */
+ScrollTrigger.matchMedia({
+  '(min-width: 900px)': function () {
+    const heroTl = gsap.timeline({
+      scrollTrigger: {
+        trigger: '#hero',
+        start: 'top top',
+        end: '+=100%',
+        pin: true,
+        pinSpacing: false,
+        scrub: 0.35,
+        anticipatePin: 1,
+        invalidateOnRefresh: true,
+      },
+    });
+    // pinSpacing: false — doc scroll advances naturally under the pinned hero,
+    // so fire-scene rides up 1:1 with scroll and there's no orphaned empty space
+    // between fire-scene and diary at pin release.
+    heroTl.fromTo('.hero h1', { y: 0, opacity: 1 }, { y: '-40vh', opacity: 0, ease: 'none' }, 0, 0);
+    heroTl.fromTo('.hero-sub', { y: 0, opacity: 1 }, { y: '-45vh', opacity: 0, ease: 'none' }, 0, 0);
+    heroTl.to('.scroll-prompt', { opacity: 0, ease: 'none' }, 0);
+    // Small negative translate so fire-scene stops rising a bit above viewport
+    // bottom — leaves a strip of the pinned hero visible (treeline + dark forest)
+    // for a "the scene sits in a clearing behind the deep forest" read.
+    heroTl.fromTo('#fire-scene', { y: 0 }, { y: '-10vh', ease: 'none' }, 0);
+  },
+  // Mobile: no scroll-linked hero animation at all. The camera-descent effect
+  // (pin, scrub fades, fire-scene sync) only ever caused problems on iOS
+  // Safari/Brave — the address bar's live viewport-height changes fight any
+  // scroll-position-driven animation, pinned or not. Simpler and more robust
+  // to just let the hero scroll away like normal page content on mobile.
+});
 
 const revealTargets = [
   ...document.querySelectorAll('.polaroid'),
@@ -100,12 +133,24 @@ const envelopeObserver = new IntersectionObserver((entries) => {
       });
     }
   }
-}, { rootMargin: '0px 0px -10% 0px', threshold: 0 });
+}, { rootMargin: '0px 0px -80% 0px', threshold: 0 });
 envelopeObserver.observe(letterScene);
 
 const seal = document.getElementById('seal');
 const sheet1 = document.getElementById('sheet-1');
 const sheet2 = document.getElementById('sheet-2');
+
+// The sheets are centered as an absolute overlay on top of the envelope, so the
+// section itself doesn't naturally grow to fit them. Content here is going to
+// vary in length (hand-drawn/handwritten hexagram entries, added one at a time),
+// so instead of a fixed height we measure the tallest sheet and grow the section
+// to match — no fixed cap, no spilling past the section's edges.
+function syncLetterSceneHeight() {
+  const contentHeight = Math.max(sheet1.scrollHeight, sheet2.scrollHeight);
+  const needed = contentHeight + window.innerHeight * 0.3;
+  letterScene.style.minHeight = Math.max(window.innerHeight, needed) + 'px';
+}
+
 const fateLine = document.getElementById('fate-line');
 const signoff = document.getElementById('signoff');
 const fateBubble = document.getElementById('fate-bubble');
@@ -134,14 +179,32 @@ function whenImageReady(img, cb) {
 }
 
 const topLetterImg = sheet1.querySelector('.letter-photo');
-whenImageReady(topLetterImg, () => positionBubble(fateBubble, fateLine, -20));
+whenImageReady(topLetterImg, () => {
+  positionBubble(fateBubble, fateLine, -20);
+  syncLetterSceneHeight();
+});
+// iOS fires a resize event when the address bar hides/shows mid-scroll — same
+// width, different height. Reacting to that forces layout-reading work
+// (getBoundingClientRect, scrollHeight) at the exact moment it's most likely
+// to cause a felt hitch, for a resize that isn't a real one. Only run this
+// stuff on a genuine width change (real resize or orientation change).
+let lastResizeWidth = window.innerWidth;
 window.addEventListener('resize', () => {
+  if (window.innerWidth === lastResizeWidth) return;
+  lastResizeWidth = window.innerWidth;
   positionBubble(fateBubble, fateLine, -20);
   positionBubble(acceptBubble, signoff, -20);
+  syncLetterSceneHeight();
 });
 if (window.ResizeObserver) {
-  new ResizeObserver(() => positionBubble(fateBubble, fateLine, -20)).observe(sheet1);
-  new ResizeObserver(() => positionBubble(acceptBubble, signoff, -20)).observe(sheet2);
+  new ResizeObserver(() => {
+    positionBubble(fateBubble, fateLine, -20);
+    syncLetterSceneHeight();
+  }).observe(sheet1);
+  new ResizeObserver(() => {
+    positionBubble(acceptBubble, signoff, -20);
+    syncLetterSceneHeight();
+  }).observe(sheet2);
 }
 
 seal.addEventListener('click', () => {
@@ -168,7 +231,7 @@ seal.addEventListener('click', () => {
     }, '<')
     .call(() => {
       gsap.delayedCall(0.6, () => positionBubble(fateBubble, fateLine, -20));
-      gsap.delayedCall(3, () => fateBubble.classList.add('shown'));
+      gsap.delayedCall(10, () => fateBubble.classList.add('shown'));
     });
 }, { once: true });
 
@@ -332,6 +395,7 @@ fateBubble.addEventListener('click', () => {
   const match = buildHexagram();
   const interpretation = hexagramReadings[match.number];
   readingEl.textContent = `This is the I Ching hexagram ${match.number}: ${match.name}. It means: ${interpretation}`;
+  syncLetterSceneHeight();
 
   gsap.set('.hex-line .bar', { scaleX: 0 });
   gsap.set(readingEl, { opacity: 0, y: 8 });
@@ -342,7 +406,7 @@ fateBubble.addEventListener('click', () => {
       whenImageReady(bottomLetterImg, () => {
         requestAnimationFrame(() => requestAnimationFrame(() => positionBubble(acceptBubble, signoff, -20)));
       });
-      gsap.delayedCall(2.5, () => acceptBubble.classList.add('shown'));
+      gsap.delayedCall(10, () => acceptBubble.classList.add('shown'));
     },
   });
 
@@ -383,5 +447,30 @@ fateBubble.addEventListener('click', () => {
 }, { once: true });
 
 acceptBubble.addEventListener('click', () => {
-  window.open('https://coliven.com/events/eb0cc6dae9a7', '_blank', 'noopener');
+  window.open('https://coliven.com/events/treeweek', '_blank', 'noopener');
+});
+
+const treeSealStamp = document.getElementById('tree-seal-stamp');
+const videoModal = document.getElementById('video-modal');
+const videoModalIframe = document.getElementById('video-modal-iframe');
+const videoModalClose = document.getElementById('video-modal-close');
+const videoEmbedSrc = 'https://www.youtube.com/embed/Fu48DwbMq_c?autoplay=1';
+
+function openVideoModal() {
+  videoModalIframe.src = videoEmbedSrc;
+  videoModal.hidden = false;
+}
+
+function closeVideoModal() {
+  videoModal.hidden = true;
+  videoModalIframe.src = '';
+}
+
+treeSealStamp.addEventListener('click', openVideoModal);
+videoModalClose.addEventListener('click', closeVideoModal);
+videoModal.addEventListener('click', (e) => {
+  if (e.target === videoModal) closeVideoModal();
+});
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && !videoModal.hidden) closeVideoModal();
 });

@@ -321,13 +321,13 @@
     { sec: '#fire-scene', zone: 'firelit', layer: 'near', sym: 'human-sit', x: 27, b: 5, w: 44, wm: 28, flip: true },
     { sec: '#fire-scene', zone: 'firelit', layer: 'near', sym: 'firepit', x: 50, cx: true, b: 0, w: 200, wm: 130,
       fx: [{ cls: 'firepit-glow', x: 0.5, y: 0.28 }] },
-    { sec: '#fire-scene', zone: 'firelit', layer: 'near', sym: 'human-dance', x: 34, cx: true, b: 1, w: 68, wm: 42 },
-    { sec: '#fire-scene', zone: 'firelit', layer: 'near', sym: 'human-dance-2', x: 42, cx: true, b: 0, w: 62, wm: 38 },
-    { sec: '#fire-scene', zone: 'firelit', layer: 'near', sym: 'human-dance-2', x: 58, cx: true, b: 0, w: 62, wm: 38, flip: true },
-    { sec: '#fire-scene', zone: 'firelit', layer: 'near', sym: 'human-dance', x: 66, cx: true, b: 1, w: 68, wm: 42, flip: true },
+    { sec: '#fire-scene', zone: 'firelit', layer: 'near', sym: 'human-dance', x: 43, xm: 34, cx: true, b: 1, w: 68, wm: 42 },
+    { sec: '#fire-scene', zone: 'firelit', layer: 'near', sym: 'human-dance-2', x: 46, xm: 42, cx: true, b: -3, w: 62, wm: 38 },
+    { sec: '#fire-scene', zone: 'firelit', layer: 'near', sym: 'human-dance-2', x: 54, xm: 58, cx: true, b: -3, w: 62, wm: 38, flip: true },
+    { sec: '#fire-scene', zone: 'firelit', layer: 'near', sym: 'human-dance', x: 57, xm: 66, cx: true, b: 1, w: 68, wm: 42, flip: true },
 
     // day 1 — LEFT block, predawn. Arrival goodies in the right margin strip.
-    { day: 1, layer: 'mid', sym: 'signpost', x: 87, b: 10, w: 84 },
+    { day: 1, layer: 'mid', sym: 'signpost', x: 87, xm: 68, b: 10, w: 84, wm: 60 },
     { day: 1, layer: 'near', sym: 'suitcase', x: 96, b: 3, w: 54 },
     { day: 1, layer: 'near', sym: 'pumpkin-cluster', x: 89, b: 0, w: 74 },
     { day: 1, layer: 'far', sym: 'fir-3', x: 105, b: 34, w: 68, o: 0.75 },
@@ -407,15 +407,16 @@
     const w = mobile && item.wm != null ? item.wm : item.w;
     item = { ...item, w };
     const el = makeSprite(item.sym, item.w);
+    const x = mobile && item.xm != null ? item.xm : item.x;
     if (blk && item.onPath) {
       const blockH = blk.rect.bottom - blk.rect.top;
       const bottomPx = item.bpx != null ? item.bpx : ((item.b || 0) / 100) * blockH;
       const yAbs = blk.rect.bottom - bottomPx;
       el.style.left = (pathXAtY(yAbs) - item.w / 2 - blk.rect.left) + 'px';
     } else if (blk) {
-      el.style.left = ((item.x / 100) * geom.w - blk.rect.left) + 'px';
+      el.style.left = ((x / 100) * geom.w - blk.rect.left) + 'px';
     } else {
-      el.style.left = item.x + '%';
+      el.style.left = x + '%';
     }
     if (item.bpx != null) el.style.bottom = item.bpx + 'px';
     else el.style.bottom = (item.b || 0) + '%';
@@ -546,15 +547,17 @@
   rebuild();
 
   let resizeTimer;
-  let refreshTimer;
   let lastW = window.innerWidth;
   window.addEventListener('resize', () => {
     const w = window.innerWidth;
     if (w === lastW) {
-      clearTimeout(refreshTimer);
-      refreshTimer = setTimeout(() => {
-        if (window.ScrollTrigger) ScrollTrigger.refresh();
-      }, 200);
+      // Width unchanged, only height moved — this is iOS's address bar
+      // hiding/showing mid-scroll, not a real resize. Everything on the page
+      // is sized in svh (stable regardless of address-bar state) specifically
+      // so nothing needs re-measuring here. Calling ScrollTrigger.refresh()
+      // in response to this used to re-run all scroll-trigger position math
+      // while the user could still be mid-gesture — a very plausible cause
+      // of felt "snapping" while scrolling. Do nothing instead.
       return;
     }
     lastW = w;
@@ -564,21 +567,25 @@
   window.addEventListener('load', rebuild);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => rebuild());
 
-  /* ---------- parallax ---------- */
-
-  const DEPTH = { far: 9, mid: 18, near: 30 };
-  for (const [anchor, { layers }] of overlays) {
-    for (const name of ['far', 'mid', 'near']) {
-      gsap.fromTo(layers[name], { y: DEPTH[name] }, {
-        y: -DEPTH[name],
-        ease: 'none',
-        scrollTrigger: {
-          trigger: anchor,
-          start: 'top bottom',
-          end: 'bottom top',
-          scrub: true,
-        },
-      });
+  /* ---------- parallax ----------
+     Desktop only — scroll-linked parallax layered on top of a phone's live
+     address-bar-resizing viewport was the whole source of the mobile jank/gap
+     problems, so mobile gets a clean, non-scroll-driven scroll instead. */
+  if (window.innerWidth >= 900) {
+    const DEPTH = { far: 9, mid: 18, near: 30 };
+    for (const [anchor, { layers }] of overlays) {
+      for (const name of ['far', 'mid', 'near']) {
+        gsap.fromTo(layers[name], { y: DEPTH[name] }, {
+          y: -DEPTH[name],
+          ease: 'none',
+          scrollTrigger: {
+            trigger: anchor,
+            start: 'top bottom',
+            end: 'bottom top',
+            scrub: true,
+          },
+        });
+      }
     }
   }
 
@@ -626,9 +633,9 @@
     return wrap;
   }
 
-  const heroStars = spawnStars(heroDecor, 60, 77, 72);
-  spawnStars(day7Decor, 16, 78, 55);
-  spawnStars(document.querySelector('#letter-scene .decor'), 22, 79, 60);
+  const heroStars = spawnStars(heroDecor, 32, 77, 72);
+  spawnStars(day7Decor, 10, 78, 55);
+  spawnStars(document.querySelector('#letter-scene .decor'), 14, 79, 60);
 
   // Ursa Minor over the hero's left shoulder — Polaris brightest, at the tip.
   if (heroStars) {
@@ -645,6 +652,20 @@
       s.style.setProperty('--tw-del', (x * 0.3).toFixed(1) + 's');
       heroStars.appendChild(s);
     }
+  }
+
+  /* ---------- pause off-screen decorative animation ----------
+     ~150 stars/particles run infinite CSS animations. None of that needs to
+     keep animating while its section is far from the viewport — pause them
+     there and resume shortly before they'd come into view. */
+  const decorEls = [...document.querySelectorAll('.decor')];
+  if (decorEls.length && 'IntersectionObserver' in window) {
+    const animObserver = new IntersectionObserver((entries) => {
+      for (const entry of entries) {
+        entry.target.classList.toggle('anim-paused', !entry.isIntersecting);
+      }
+    }, { rootMargin: '50% 0px 50% 0px', threshold: 0 });
+    for (const el of decorEls) animObserver.observe(el);
   }
 
   ScrollTrigger.refresh();

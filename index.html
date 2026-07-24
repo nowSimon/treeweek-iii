@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TREEWEEK III — an invitation</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>TREEWEEK III</title>
 <meta name="description" content="Seven nights north of Berlin. September 22–29, 2026.">
 <meta property="og:title" content="TREEWEEK III — an invitation">
 <meta property="og:description" content="Seven nights north of Berlin. September 22–29, 2026.">
@@ -14,7 +14,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&amp;family=Caveat:wght@700&amp;family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&amp;family=Homemade+Apple&amp;display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=35">
+<link rel="stylesheet" href="style.css?v=49">
 </head>
 <body>
 
@@ -37,8 +37,8 @@
   <svg class="diary-svg"></svg>
 
   <div class="day-block" data-day="1" data-side="left">
-    <div class="polaroid has-photo rotate-1">
-      <img src="assets/polaroids/day-1.jpg" alt="Day 1">
+    <div class="polaroid has-photo" style="--rot: -9deg">
+      <img loading="lazy" decoding="async" src="assets/polaroids/day-1.jpg" alt="Day 1">
       <span class="polaroid-tag">DAY 1</span>
     </div>
     <div class="diary-text">
@@ -47,8 +47,8 @@
   </div>
 
   <div class="day-block" data-day="2" data-side="right">
-    <div class="polaroid has-photo rotate-2">
-      <img src="assets/polaroids/day-2.jpg" alt="Day 2">
+    <div class="polaroid has-photo" style="--rot: 6deg">
+      <img loading="lazy" decoding="async" src="assets/polaroids/day-2.jpg" alt="Day 2">
       <span class="polaroid-tag">DAY 2</span>
     </div>
     <div class="diary-text">
@@ -57,8 +57,8 @@
   </div>
 
   <div class="day-block" data-day="3" data-side="left">
-    <div class="polaroid has-photo rotate-2">
-      <img src="assets/polaroids/day-3.jpg" alt="Day 3">
+    <div class="polaroid has-photo" style="--rot: -3deg">
+      <img loading="lazy" decoding="async" src="assets/polaroids/day-3.jpg" alt="Day 3">
       <span class="polaroid-tag">DAY 3</span>
     </div>
     <div class="diary-text">
@@ -67,8 +67,8 @@
   </div>
 
   <div class="day-block" data-day="4" data-side="right">
-    <div class="polaroid has-photo rotate-3">
-      <img src="assets/polaroids/day-4.jpg" alt="Day 4">
+    <div class="polaroid has-photo" style="--rot: 8deg">
+      <img loading="lazy" decoding="async" src="assets/polaroids/day-4.jpg" alt="Day 4">
       <span class="polaroid-tag">DAY 4</span>
     </div>
     <div class="diary-text">
@@ -77,8 +77,8 @@
   </div>
 
   <div class="day-block" data-day="5" data-side="left">
-    <div class="polaroid has-photo rotate-1">
-      <img src="assets/polaroids/day-5.jpg" alt="Day 5">
+    <div class="polaroid has-photo" style="--rot: -13deg">
+      <img loading="lazy" decoding="async" src="assets/polaroids/day-5.jpg" alt="Day 5">
       <span class="polaroid-tag">DAY 5</span>
     </div>
     <div class="diary-text">
@@ -87,12 +87,12 @@
   </div>
 
   <div class="day-block" data-day="6" data-side="right">
-    <div class="polaroid has-photo rotate-3">
-      <img src="assets/polaroids/day-7a.jpg" alt="Day 6">
+    <div class="polaroid has-photo" style="--rot: 4deg">
+      <img loading="lazy" decoding="async" src="assets/polaroids/day-7a.jpg" alt="Day 6">
       <span class="polaroid-tag">DAY 6</span>
     </div>
-    <div class="polaroid has-photo rotate-4">
-      <img src="assets/polaroids/day-7b.jpg" alt="Day 6">
+    <div class="polaroid has-photo" style="--rot: -10deg">
+      <img loading="lazy" decoding="async" src="assets/polaroids/day-7b.jpg" alt="Day 6">
       <span class="polaroid-tag">DAY 6</span>
     </div>
     <div class="diary-text">
@@ -101,13 +101,17 @@
   </div>
 
   <div class="day-block" data-day="7" data-side="left">
-    <div class="polaroid has-photo rotate-4">
-      <img src="assets/polaroids/day-7.jpg" alt="Day 7">
+    <div class="polaroid has-photo" style="--rot: 10deg">
+      <img loading="lazy" decoding="async" src="assets/polaroids/day-7.jpg" alt="Day 7">
       <span class="polaroid-tag">DAY 7</span>
     </div>
     <div class="diary-text">
       <p>Wow, it's already time to go. What a crazy timeline I got into here. I'm gonna miss those people... glad I'm gonna stay in Berlin for another week to TREEcompress.</p>
     </div>
+  </div>
+
+  <div class="diary-close">
+    <p>Damn... this TREEWEEK was a blast. I hope I can come again next year. It was a whole week but it still felt a bit too short. What if it was just one day longer?</p>
   </div>
 
 </div>
@@ -130,7 +134,7 @@
     <div class="sheet sheet-1" id="sheet-1">
       <button class="thought-bubble bubble-right" id="fate-bubble" type="button">yes</button>
       <div class="letter-photo-wrap">
-        <img class="letter-photo" src="assets/letter-top.png" alt="Hey my friend, I hope this letter finds you well. You're invited to TREEWEEK III! As always, we're meeting north of Berlin in September. This year's gathering is all about becoming a main character. Do you want to know your fate?">
+        <img loading="lazy" decoding="async" class="letter-photo" src="assets/letter-top.png" alt="Hey my friend, I hope this letter finds you well. You're invited to TREEWEEK III! As always, we're meeting north of Berlin in September. This year's gathering is all about becoming a main character. Do you want to know your fate?">
         <div class="fate-line" id="fate-line"></div>
       </div>
     </div>
@@ -141,8 +145,10 @@
         <div class="hexagram" id="hexagram"></div>
         <p class="reading" id="reading"></p>
         <div class="letter-photo-wrap letter-signoff-wrap">
-          <img class="letter-photo" src="assets/letter-bottom.png" alt="Anyway, let me know if you can make it. We're gonna have the time of our life. Truly yours, Simon">
-          <img class="tree-seal-stamp" src="assets/envelope-seal.png" alt="tree of life ink stamp">
+          <img loading="lazy" decoding="async" class="letter-photo" src="assets/letter-bottom.png" alt="Anyway, let me know if you can make it. We're gonna have the time of our life. Truly yours, Simon">
+          <button class="tree-seal-stamp" id="tree-seal-stamp" type="button" aria-label="play video">
+            <img loading="lazy" decoding="async" src="assets/envelope-seal.png" alt="tree of life ink stamp">
+          </button>
           <div class="signoff" id="signoff"></div>
         </div>
       </div>
@@ -150,10 +156,17 @@
   </div>
 </section>
 
+<div class="video-modal" id="video-modal" hidden>
+  <button class="video-modal-close" id="video-modal-close" type="button" aria-label="close video">&times;</button>
+  <div class="video-modal-frame">
+    <iframe id="video-modal-iframe" src="" title="TREEWEEK video" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+  </div>
+</div>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-<script src="script.js?v=25"></script>
-<script src="map.js?v=11"></script>
+<script src="script.js?v=41"></script>
+<script src="map.js?v=22"></script>
 
 </body>
 </html>
