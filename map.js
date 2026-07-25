@@ -340,7 +340,10 @@
         { cls: 'window-glow', x: 0.74, y: 0.3 },
       ] },
     { day: 2, layer: 'near', sym: 'log-bench', x: 26, b: 1, w: 105 },
-    { day: 2, layer: 'near', sym: 'human-walk', x: 41, b: 6, w: 44, onPath: true },
+    // hidden on mobile: the hut keeps its absolute 200px width while the track
+    // shrinks, so it covers the path lane this figure walks in and the figure
+    // ends up in front of the wall with no path under it.
+    { day: 2, layer: 'near', sym: 'human-walk', x: 41, b: 6, w: 44, onPath: true, hideM: true },
 
     // day 3 — LEFT block, day. Forest walk + lake on the right.
     { day: 3, layer: 'far', sym: 'fir-3', x: 97, b: 58, w: 78, o: 0.7 },
@@ -404,6 +407,10 @@
 
   function placeInto(container, item, blk, geom) {
     const mobile = geom.w < 520;
+    // hideM: drop the sprite on narrow tracks. For anything where xm/wm can't
+    // save it — e.g. an onPath figure, whose x comes from the path itself and
+    // so ignores xm — leaving it out beats placing it badly.
+    if (mobile && item.hideM) return null;
     const w = mobile && item.wm != null ? item.wm : item.w;
     item = { ...item, w };
     const el = makeSprite(item.sym, item.w);
