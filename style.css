@@ -26,8 +26,17 @@ html {
      keeps scrolling sideways regardless. It has to be set here too.
      This is the ONLY place horizontal overflow may be clipped. Clipping here
      cuts at the screen edge, which is where scenery is meant to run off; doing
-     it on any inner container cuts sprites mid-screen instead. */
-  overflow-x: hidden;
+     it on any inner container cuts sprites mid-screen instead.
+
+     `clip`, never `hidden`. CSS forbids `hidden` on one axis alongside `visible`
+     on the other, so `hidden` here silently promotes overflow-y to `auto` and
+     makes <html> a scroll container nested inside the viewport scroller. Two
+     stacked scrollers chain: an upward gesture is swallowed reaching the inner
+     one's top before the outer one moves, so scrolling up takes two gestures.
+     `clip` is the only value that clips an axis without creating a scroller.
+     No `hidden` fallback for pre-2022 engines — it would reintroduce exactly
+     that bug; those browsers get sideways scroll instead. */
+  overflow-x: clip;
 }
 
 body {
