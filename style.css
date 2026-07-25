@@ -22,14 +22,12 @@
 
 html {
   background: #050912;
-  /* iOS Safari does not honour overflow-x on <body> alone — the document
-     element keeps scrolling sideways regardless. It has to be set here too.
-     `clip` rather than `hidden` because `hidden` would make <html> a scroll
-     container, which ScrollTrigger's pinning reads as the scroller and
-     fights with. `clip` blocks the scroll without creating one.
-     The `hidden` line is a fallback for Safari older than 16. */
+  /* iOS Safari does not honour overflow-x on <body> alone — the document element
+     keeps scrolling sideways regardless. It has to be set here too.
+     This is the ONLY place horizontal overflow may be clipped. Clipping here
+     cuts at the screen edge, which is where scenery is meant to run off; doing
+     it on any inner container cuts sprites mid-screen instead. */
   overflow-x: hidden;
-  overflow-x: clip;
 }
 
 body {
@@ -60,7 +58,6 @@ body {
 
 body {
   overflow-x: hidden;
-  overflow-x: clip;
 }
 
 section {
@@ -768,14 +765,13 @@ section {
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  /* Scenery sprites are placed to bleed off the left and right edges on
-     purpose. Vertical bleed has to stay visible (treelines and ground carry
-     across section boundaries), but the horizontal bleed was widening the
-     document and letting the page scroll sideways. `.decor` is inset:0 of a
-     full-width section, so clipping x here cuts exactly where the screen edge
-     already does — nothing that was visible gets lost. */
-  overflow-x: clip;
-  overflow-y: visible;
+  /* Never clip this box. Most .decor containers are attached to individual
+     day-blocks, not to full-width sections (map.js prepends them to each
+     anchor), and sprites are deliberately placed from -14% to 114% of their
+     anchor to spill past it. Clipping here therefore slices sprites in the
+     middle of the screen rather than at the screen edge. Horizontal overflow
+     is contained on <html> instead, where the cut lands off-screen. */
+  overflow: visible;
 }
 
 .decor.anim-paused,
