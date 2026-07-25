@@ -22,21 +22,8 @@
 
 html {
   background: #050912;
-  /* iOS Safari does not honour overflow-x on <body> alone — the document element
-     keeps scrolling sideways regardless. It has to be set here too.
-     This is the ONLY place horizontal overflow may be clipped. Clipping here
-     cuts at the screen edge, which is where scenery is meant to run off; doing
-     it on any inner container cuts sprites mid-screen instead.
-
-     `clip`, never `hidden`. CSS forbids `hidden` on one axis alongside `visible`
-     on the other, so `hidden` here silently promotes overflow-y to `auto` and
-     makes <html> a scroll container nested inside the viewport scroller. Two
-     stacked scrollers chain: an upward gesture is swallowed reaching the inner
-     one's top before the outer one moves, so scrolling up takes two gestures.
-     `clip` is the only value that clips an axis without creating a scroller.
-     No `hidden` fallback for pre-2022 engines — it would reintroduce exactly
-     that bug; those browsers get sideways scroll instead. */
-  overflow-x: clip;
+  /* Deliberately no overflow here. Horizontal containment lives in the
+     max-width: 899.98px block instead — see the note there. */
 }
 
 body {
@@ -171,6 +158,21 @@ section {
    the top to close that gap. The hero's heading stays exactly as it always
    was — vertically centered — only its height shrinks a little. */
 @media (max-width: 899.98px) {
+  /* Sideways-scroll containment, deliberately scoped to the same breakpoint the
+     pin is gated behind. Scenery sprites are placed to spill past the viewport,
+     which widens the document and lets a phone scroll sideways. Clipping it on
+     <html> fixes that — but above 900px the pinned hero runs with
+     pinSpacing: false, so document scroll advances underneath a position: fixed
+     element, and a clip on the root disturbs that: scroll stalled at the pin
+     release point (940px, exactly where the diary and dirt path start) and every
+     direction change needed a second gesture. Below 900px there is no pin at
+     all, so the clip and the pin never coexist.
+     `clip` not `hidden`: `hidden` alongside `visible` on the other axis is
+     illegal, so it silently promotes overflow-y to `auto` and makes <html> a
+     scroll container. No `hidden` fallback for pre-2022 engines for the same
+     reason — they just get sideways scroll. */
+  html { overflow-x: clip; }
+
   .hero {
     min-height: 100svh;
   }
