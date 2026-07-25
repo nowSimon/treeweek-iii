@@ -22,6 +22,14 @@
 
 html {
   background: #050912;
+  /* iOS Safari does not honour overflow-x on <body> alone — the document
+     element keeps scrolling sideways regardless. It has to be set here too.
+     `clip` rather than `hidden` because `hidden` would make <html> a scroll
+     container, which ScrollTrigger's pinning reads as the scroller and
+     fights with. `clip` blocks the scroll without creating one.
+     The `hidden` line is a fallback for Safari older than 16. */
+  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 body {
@@ -52,6 +60,7 @@ body {
 
 body {
   overflow-x: hidden;
+  overflow-x: clip;
 }
 
 section {
@@ -299,19 +308,24 @@ section {
 
 .polaroid {
   --rot: 0deg;
+  /* Rotating a box widens the space it occupies: a 350x420 polaroid turned 13deg
+     needs ~25% more width than its layout box. On narrow screens that surplus is
+     what pushed past the gutter and made the page scrollable sideways. Scaling
+     the angle down is cheaper than shrinking the photo — see the mobile block. */
+  --rot-scale: 1;
   flex-shrink: 0;
   width: 350px;
   max-width: 100%;
   aspect-ratio: 350 / 420;
   opacity: 0;
-  transform: translateY(50px) rotate(calc(var(--rot) * 2.2 - 14deg)) scale(0.9);
+  transform: translateY(50px) rotate(calc((var(--rot) * 2.2 - 14deg) * var(--rot-scale))) scale(0.9);
   transition: opacity 0.6s ease, transform 0.75s cubic-bezier(0.31, 1.6, 0.55, 1);
   margin: 0 -10px;
 }
 
 .polaroid.is-visible {
   opacity: 1;
-  transform: translateY(0) rotate(var(--rot)) scale(1);
+  transform: translateY(0) rotate(calc(var(--rot) * var(--rot-scale))) scale(1);
 }
 
 .fire-scene .scene {
@@ -754,7 +768,14 @@ section {
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  overflow: visible;
+  /* Scenery sprites are placed to bleed off the left and right edges on
+     purpose. Vertical bleed has to stay visible (treelines and ground carry
+     across section boundaries), but the horizontal bleed was widening the
+     document and letting the page scroll sideways. `.decor` is inset:0 of a
+     full-width section, so clipping x here cuts exactly where the screen edge
+     already does — nothing that was visible gets lost. */
+  overflow-x: clip;
+  overflow-y: visible;
 }
 
 .decor.anim-paused,
@@ -1072,7 +1093,13 @@ section {
 @media (max-width: 640px) {
   .day-block { width: 62vw; gap: 1rem; }
   .diary-text p { font-size: 1.15rem; }
-  .polaroid { width: 280px; }
+  /* Fluid rather than a fixed 280px, so this holds from a 320px-wide phone up
+     to the 640px breakpoint instead of being tuned to one handset. The angle is
+     dialled back to keep each rotated polaroid inside .diary-track's 4vw gutter
+     — enough tilt to still read as scattered snapshots, not enough to break out
+     and make the page scroll sideways. Negative margins dropped for the same
+     reason: they pulled the outer edge back past the gutter. */
+  .polaroid { width: min(280px, 100%); margin: 0; --rot-scale: 0.4; }
   .polaroid.has-photo { padding: 11px 11px 0 11px; }
   .polaroid.has-photo .polaroid-tag { flex-basis: 54px; font-size: 1.4rem; }
   .letter-inner { font-size: 1.2rem; }
