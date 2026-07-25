@@ -397,9 +397,9 @@ fateBubble.addEventListener('click', () => {
   readingEl.textContent = `This is the I Ching hexagram ${match.number}: ${match.name}. It means: ${interpretation}`;
   syncLetterSceneHeight();
 
-  gsap.set('.hex-line .bar', { scaleX: 0 });
-  gsap.set(readingEl, { opacity: 0, y: 8 });
-
+  // The hexagram lines and the reading are writing on a letter, so they are
+  // simply on the page when it comes out — no draw-on or type-on reveal. Only
+  // the sheets themselves move.
   const tl = gsap.timeline({
     onComplete: () => {
       const bottomLetterImg = sheet2.querySelector('.letter-signoff-wrap .letter-photo');
@@ -431,19 +431,7 @@ fateBubble.addEventListener('click', () => {
       autoAlpha: 1,
       duration: 0.9,
       ease: 'back.out(1.1)',
-    }, '-=0.35')
-    .to('.hex-line .bar', {
-      scaleX: 1,
-      stagger: 0.09,
-      duration: 0.2,
-      ease: 'power2.out',
-    }, '-=0.15')
-    .to(readingEl, {
-      opacity: 1,
-      y: 0,
-      duration: 0.6,
-      ease: 'power2.out',
-    }, '+=0.2');
+    }, '-=0.35');
 }, { once: true });
 
 acceptBubble.addEventListener('click', () => {
