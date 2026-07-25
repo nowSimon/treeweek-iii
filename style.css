@@ -157,7 +157,7 @@ section {
    was — vertically centered — only its height shrinks a little. */
 @media (max-width: 899.98px) {
   .hero {
-    min-height: 78svh;
+    min-height: 100svh;
   }
   .fire-scene {
     min-height: 78svh;
