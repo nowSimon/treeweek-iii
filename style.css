@@ -1115,6 +1115,10 @@ section {
   .letter-inner { font-size: 1.2rem; }
   .letter-continued { font-size: 1.4rem; }
   .reading, .hexagram { padding: 0 5%; }
+  /* The sheet shrinks to ~90vw here and the handwriting photos scale with it,
+     but .reading is sized in rem so it would stay at its desktop size and read
+     as oversized next to them. */
+  .reading { font-size: 0.95rem; line-height: 1.65; }
   .thought-bubble { max-width: 240px; font-size: 2.8rem; padding: 1.1rem 2rem; }
   .thought-bubble.bubble-right, .thought-bubble.bubble-left {
     left: auto;
