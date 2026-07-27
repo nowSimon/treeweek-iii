@@ -683,15 +683,18 @@ section {
   line-height: 1.4;
 }
 
-.fate-intro {
+.fate-intro-photo {
   opacity: 0.85;
-  padding: 0 8%;
 }
 
 .reading {
   opacity: 0.9;
   padding: 0 8%;
   margin-bottom: 1.5rem;
+  font-family: 'Special Elite', 'Courier New', monospace;
+  font-size: 1.15rem;
+  line-height: 1.7;
+  letter-spacing: 0.02em;
 }
 
 .hexagram {
@@ -1111,7 +1114,7 @@ section {
   .polaroid.has-photo .polaroid-tag { flex-basis: 54px; font-size: 1.4rem; }
   .letter-inner { font-size: 1.2rem; }
   .letter-continued { font-size: 1.4rem; }
-  .fate-intro, .reading, .hexagram { padding: 0 5%; }
+  .reading, .hexagram { padding: 0 5%; }
   .thought-bubble { max-width: 240px; font-size: 2.8rem; padding: 1.1rem 2rem; }
   .thought-bubble.bubble-right, .thought-bubble.bubble-left {
     left: auto;
